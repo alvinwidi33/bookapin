@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1074730233614",
+    "project_id": "book-d8295",
+    "storage_bucket": "book-d8295.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074730233614:android:198efdc324840679c9b15f",
+        "android_client_info": {
+          "package_name": "com.example.bookapin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074730233614-7mtg016fsqeo3925fk4m7vfnpl328hpc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfvIe5G2vA1PqevpZTX0olR7nwgXm7yRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074730233614-7mtg016fsqeo3925fk4m7vfnpl328hpc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
