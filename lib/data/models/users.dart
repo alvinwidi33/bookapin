@@ -10,13 +10,17 @@ class Users {
   String username;
   String role;
   bool isActive;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   Users({
     required this.id,
     required this.email,
     required this.username,
     required this.role,
-    required this.isActive
+    required this.isActive,
+    required this.createdAt,
+    required this.updatedAt
   });
 
   factory Users.fromJson(Map<String, dynamic> json) => Users(
@@ -25,6 +29,8 @@ class Users {
     username: json["username"], 
     role: json["role"],
     isActive: json["isActive"],
+    createdAt: json['createdAt'],
+    updatedAt: json['updatedAt']
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +38,8 @@ class Users {
     "email": email,
     "username": username,
     "role":"role",
-    "isActive":isActive
+    "isActive":isActive,
+    "createdAt": createdAt,
+    "updatedAt": updatedAt
   };
 }

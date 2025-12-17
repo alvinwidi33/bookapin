@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -12,12 +13,27 @@ class AuthHelper {
   final serverClientId =
       '1074730233614-7mtg016fsqeo3925fk4m7vfnpl328hpc.apps.googleusercontent.com';
 
-  Future<UserCredential> signUpWithEmailAndPassword(
+  Future<UserCredential> signUpWithEmailUsernameAndPassword(
+    String username,
     String email,
     String password,
   ) async {
-    UserCredential userCredential = await firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: password);
+    UserCredential userCredential =
+        await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'username': username,
+        'email': email,
+        'role': 'Customer',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
     return userCredential;
   }
 
@@ -31,7 +47,6 @@ class AuthHelper {
   }
 
   Future<UserCredential?> signInWithGoogle() async {
-    // Trigger the authentication flow
     unawaited(
       googleSignIn.initialize(
         clientId: clientId,
@@ -41,15 +56,11 @@ class AuthHelper {
 
     final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
 
-    // Obtain the auth details from the request
     final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-    // Create a new credential
     final OAuthCredential credential = GoogleAuthProvider.credential(
       idToken: googleAuth.idToken,
     );
-
-    // Once signed in, return the UserCredential
     return await firebaseAuth.signInWithCredential(credential);
   }
 

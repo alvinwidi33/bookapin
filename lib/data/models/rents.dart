@@ -16,7 +16,9 @@ class Rents {
   Users? userDetails;
   int duration;
   double price;
+  DateTime borrowedAt;
   bool isReturn;
+  DateTime returnedAt;
 
   Rents({
     required this.id,
@@ -26,7 +28,9 @@ class Rents {
     this.userDetails,
     required this.duration,
     required this.price,
+    required this.borrowedAt,
     required this.isReturn,
+    required this.returnedAt
   });
 
   factory Rents.fromJson(Map<String, dynamic> json) => Rents(
@@ -35,7 +39,9 @@ class Rents {
     user: json["user"],
     duration: json["duration"],
     price: json["price"],
+    borrowedAt: json["borrowedAt"],
     isReturn: json["isReturn"] == 0,
+    returnedAt: json["returnedAt"]
   );
 
   factory Rents.fromFirestore(
@@ -52,7 +58,9 @@ class Rents {
         userDetails: userDetails,
         duration: data["duration"],
         price: data["price"],
+        borrowedAt: data["borrowedAt"],
         isReturn: data["isReturn"] == 0,
+        returnedAt: data["returnedAt"]
       );
     }
     
@@ -62,6 +70,8 @@ class Rents {
     "user": user,
     "duration": duration,
     "price": price,
+    "borrowedAt":borrowedAt,
     "isReturn": isReturn ? 0 : 1,
+    "returnedAt": returnedAt
   };
 }
