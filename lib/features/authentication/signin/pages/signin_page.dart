@@ -126,7 +126,7 @@ class _SigninPageState extends State<SigninPage> {
                     width: double.infinity,
                     height: 56,
                     child: Container(
-                      decoration: AppTheme.buttonDecoration,
+                      decoration: AppTheme.buttonDecorationPrimary,
                       child: ElevatedButton(
                         onPressed: () {
                           context.read<SignInBloc>().add(
