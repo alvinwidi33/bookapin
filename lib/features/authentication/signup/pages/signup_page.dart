@@ -148,7 +148,7 @@ class _SignupPageState extends State<SignupPage> {
                         width: double.infinity,
                         height: 56,
                         child: Container(
-                          decoration: AppTheme.buttonDecoration,
+                          decoration: AppTheme.buttonDecorationPrimary,
                           child: ElevatedButton(
                             onPressed: () {
                           context.read<SignUpBloc>().add(

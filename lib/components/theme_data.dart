@@ -64,8 +64,20 @@ class AppTheme {
   );
 
   // Button Decoration
-  static BoxDecoration buttonDecoration = BoxDecoration(
+  static BoxDecoration buttonDecorationPrimary = BoxDecoration(
     gradient: primaryGradient,
+    borderRadius: BorderRadius.circular(20),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.15),
+        blurRadius: 12,
+        offset: const Offset(0, 6),
+      ),
+    ],
+  );
+
+    static BoxDecoration buttonDecorationSecondary = BoxDecoration(
+    color: primaryPurple,
     borderRadius: BorderRadius.circular(20),
     boxShadow: [
       BoxShadow(
