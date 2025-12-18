@@ -1,3 +1,4 @@
+import 'package:bookapin/data/models/users.dart';
 import 'package:bookapin/features/authentication/auth_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,12 +20,13 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   ) async {
     emit(SignInLoading());
     try {
-      final UserCredential result =
+      final Users user =
           await authHelper.signInWithEmailAndPassword(
-        event.email,
-        event.password,
-      );
-      emit(SignInSuccess(result.user!));
+            event.email,
+            event.password,
+          );
+
+      emit(SignInSuccess(user));
     } on FirebaseAuthException catch (e) {
       emit(SignInError(e.message ?? 'Login failed'));
     } catch (e) {
@@ -38,9 +40,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   ) async {
     emit(SignInLoading());
     try {
-      final UserCredential? result =
+      final Users user =
           await authHelper.signInWithGoogle();
-      emit(SignInSuccess(result!.user!));
+      emit(SignInSuccess(user));
     } catch (e) {
       emit(SignInError(e.toString()));
     }

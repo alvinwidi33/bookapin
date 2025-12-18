@@ -33,7 +33,7 @@ class _SigninPageState extends State<SigninPage> {
       listener: (context, state) {
         if (state is SignInLoading) {
         } else if (state is SignInSuccess) {
-          Navigator.pushReplacementNamed(context, '/home');
+          state.user.role == 'Customer'? Navigator.pushReplacementNamed(context, '/home') : Navigator.pushReplacementNamed(context, '/dashboard');
         } else if (state is SignInError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),

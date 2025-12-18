@@ -1,45 +1,50 @@
-import 'dart:convert';
-
-Users usersFromJson(String str) => Users.fromJson(json.decode(str));
-
-String usersToJson(Users data) => json.encode(data.toJson());
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Users {
-  dynamic id;
-  String email;
-  String username;
-  String role;
-  bool isActive;
-  DateTime createdAt;
-  DateTime updatedAt;
+  final String? id;
+  final String email;
+  final String username;
+  final String role;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Users({
-    required this.id,
+    this.id,
     required this.email,
     required this.username,
     required this.role,
     required this.isActive,
     required this.createdAt,
-    required this.updatedAt
+    required this.updatedAt,
   });
 
-  factory Users.fromJson(Map<String, dynamic> json) => Users(
-    id: json["id"],
-    email: json["email"],
-    username: json["username"], 
-    role: json["role"],
-    isActive: json["isActive"],
-    createdAt: json['createdAt'],
-    updatedAt: json['updatedAt']
-  );
+  /// From Firestore
+  factory Users.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
+    final data = doc.data()!;
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "email": email,
-    "username": username,
-    "role":"role",
-    "isActive":isActive,
-    "createdAt": createdAt,
-    "updatedAt": updatedAt
-  };
+    return Users(
+      id: doc.id,
+      email: data['email'],
+      username: data['username'],
+      role: data['role'],
+      isActive: data['isActive'],
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+    );
+  }
+
+  /// To Firestore
+  Map<String, dynamic> toFirestore() {
+    return {
+      'email': email,
+      'username': username,
+      'role': role,
+      'isActive': isActive,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+    };
+  }
 }
