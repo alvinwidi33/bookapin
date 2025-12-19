@@ -1,9 +1,21 @@
-part of 'home_bloc.dart';
+import 'package:bookapin/data/models/books.dart';
 
-class HomeState {
-  final int counter; 
+abstract class HomeState {}
+class HomeInitial extends HomeState {}
 
-  const HomeState(this.counter);
+class HomeLoading extends HomeState {}
 
-  copyWith({int? counter}) => HomeState(counter ?? this.counter);
+class HomeLoaded extends HomeState {
+  final List<Book> carouselBooks;
+  final List<Book> allBooks;
+
+  HomeLoaded({
+    required this.carouselBooks,
+    required this.allBooks,
+  });
+}
+
+class HomeError extends HomeState {
+  final String message;
+  HomeError(this.message);
 }

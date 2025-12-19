@@ -9,6 +9,7 @@ class AppTheme {
   static const Color googleBlue = Color(0xFF32BCF4);
   static const Color gradientStart = Color(0xFF829BFF);
   static const Color gradientEnd = Color(0xFFD68AF4);
+  static const Color iconColor = Color(0xFFE37E4A);
   
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
@@ -24,6 +25,14 @@ class AppTheme {
   static TextStyle bodyStyle = GoogleFonts.poppins(
     fontWeight: FontWeight.w400,
     fontSize: 16,
+  );
+    static TextStyle cardBody = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontSize: 10.8,
+  );
+  static TextStyle cardTitle = GoogleFonts.poppins(
+    fontWeight: FontWeight.bold,
+    fontSize: 12,
   );
 
   static TextStyle linkStyle = GoogleFonts.poppins(
