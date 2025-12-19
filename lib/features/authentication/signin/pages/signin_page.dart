@@ -59,7 +59,7 @@ class _SigninPageState extends State<SigninPage> {
             Image.asset("assets/logo.png"),
             const SizedBox(height: 40),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.72,
+              width: MediaQuery.of(context).size.width * 0.84,
               child: Column(
                 children: [
                   Align(
@@ -112,7 +112,7 @@ class _SigninPageState extends State<SigninPage> {
                           }, 
                           icon: Icon(
                             isVisible ? Icons.visibility_off : Icons.visibility,
-                          )
+                          ), style: ButtonStyle(iconColor: WidgetStateProperty.all(AppTheme.iconColor)),
                         )
                       ),
                     ),

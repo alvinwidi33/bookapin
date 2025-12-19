@@ -1,8 +1,3 @@
-part of 'home_bloc.dart';
+abstract class HomeEvent {}
 
-@immutable
-sealed class HomeEvent {}
-
-final class HomeIncrementEvent extends HomeEvent {}
-
-final class HomeDecrementEvent extends HomeEvent {}
+class FetchAllBooks2024 extends HomeEvent {}
