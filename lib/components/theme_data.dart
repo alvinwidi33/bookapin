@@ -35,6 +35,14 @@ class AppTheme {
     fontSize: 12,
   );
 
+  static TextStyle titleDetail = GoogleFonts.poppins(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  );
+  static TextStyle subtitleDetail = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
+  );
   static TextStyle linkStyle = GoogleFonts.poppins(
     fontWeight: FontWeight.bold,
     fontSize: 16,

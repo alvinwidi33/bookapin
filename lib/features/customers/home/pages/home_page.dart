@@ -64,7 +64,11 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Container(
+                      child: Material(
+                        color: Colors.transparent,
+                        child:InkWell(
+                          onTap:() => Navigator.pushNamed(context, "/detail-book"),
+                          child:Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
@@ -142,6 +146,8 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
+                    ),
+                    ),
                     ),
                     SizedBox(width: 12),
                     Expanded(
