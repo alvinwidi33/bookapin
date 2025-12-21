@@ -5,6 +5,7 @@ import 'package:bookapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:bookapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:bookapin/features/authentication/signup/bloc/signup_bloc.dart';
 import 'package:bookapin/features/authentication/signup/pages/signup_page.dart';
+import 'package:bookapin/features/customers/detail-rents/pages/detail_rents.dart';
 import 'package:bookapin/features/customers/detail/pages/detail_book.dart';
 import 'package:bookapin/features/customers/history/pages/history_page.dart';
 import 'package:bookapin/features/customers/home/bloc/home_bloc.dart';
@@ -63,7 +64,8 @@ class MyApp extends StatelessWidget {
             '/signup': (_) => const SignupPage(),
             '/home': (_) => const HomePage(),
             '/detail-book': (_) => const DetailBook(),
-            '/history': (_) => const HistoryPage()
+            '/history': (_) => const HistoryPage(),
+            '/detail-rent': (_) => const DetailRent()
           },
         ),
       ),

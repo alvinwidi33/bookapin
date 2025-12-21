@@ -190,7 +190,7 @@ class _DetailBookState extends State<DetailBook> {
                             ),
                           ),
 
-                                                    Expanded(
+                          Expanded(
                             child: GestureDetector(
                               onTap: () => setState(() => selectedTab = 1),
                               child: Container(
