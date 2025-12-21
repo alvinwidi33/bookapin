@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Colors
   static const Color primaryPurple = Color(0xFF6B32F8);
   static const Color backgroundColor = Color(0xFFF8F2FD);
   static const Color googleBlue = Color(0xFF32BCF4);
@@ -11,12 +10,10 @@ class AppTheme {
   static const Color gradientEnd = Color(0xFFD68AF4);
   static const Color iconColor = Color(0xFFE37E4A);
   
-  // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [gradientStart, gradientEnd],
   );
 
-  // Text Styles
   static TextStyle headingStyle = GoogleFonts.poppins(
     fontWeight: FontWeight.bold,
     fontSize: 20,
@@ -26,7 +23,7 @@ class AppTheme {
     fontWeight: FontWeight.w400,
     fontSize: 16,
   );
-    static TextStyle cardBody = GoogleFonts.poppins(
+  static TextStyle cardBody = GoogleFonts.poppins(
     fontWeight: FontWeight.w400,
     fontSize: 10.8,
   );
@@ -35,6 +32,14 @@ class AppTheme {
     fontSize: 12,
   );
 
+  static TextStyle titleDetail = GoogleFonts.poppins(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  );
+  static TextStyle subtitleDetail = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
+  );
   static TextStyle linkStyle = GoogleFonts.poppins(
     fontWeight: FontWeight.bold,
     fontSize: 16,
@@ -47,7 +52,6 @@ class AppTheme {
     color: Colors.white,
   );
 
-  // Input Decoration
   static InputDecoration inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
@@ -59,7 +63,6 @@ class AppTheme {
     );
   }
 
-  // Container Decoration for Input Fields
   static BoxDecoration inputContainerDecoration = BoxDecoration(
     color: Colors.white,
     borderRadius: BorderRadius.circular(20),
@@ -72,7 +75,6 @@ class AppTheme {
     ],
   );
 
-  // Button Decoration
   static BoxDecoration buttonDecorationPrimary = BoxDecoration(
     gradient: primaryGradient,
     borderRadius: BorderRadius.circular(20),
@@ -97,7 +99,6 @@ class AppTheme {
     ],
   );
 
-  // Theme Data
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,

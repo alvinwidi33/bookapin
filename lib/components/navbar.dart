@@ -38,7 +38,7 @@ class CurvedBottomNavBar extends StatelessWidget {
           ),
           _NavItem(
             icon: Icons.history_rounded,
-            label: 'History',
+            label: 'My Rents',
             isActive: currentIndex == 1,
             onTap: () => onTap(1),
           ),

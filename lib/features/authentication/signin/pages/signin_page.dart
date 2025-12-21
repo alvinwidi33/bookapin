@@ -44,7 +44,7 @@ class _SigninPageState extends State<SigninPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Hello ${state.user.username}. Welcome back!", style:AppTheme.bodyStyle)),
           );
-          state.user.role == 'Customer'? Navigator.pushReplacementNamed(context, '/home') : Navigator.pushReplacementNamed(context, '/dashboard');
+          state.user.role == 'Customer' ? Navigator.pushReplacementNamed(context, '/home') : Navigator.pushReplacementNamed(context, '/dashboard');
         } else if (state is SignInError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -104,6 +104,7 @@ class _SigninPageState extends State<SigninPage> {
                       },
                       decoration: AppTheme.inputDecoration("Password").copyWith(
                         errorText: isPasswordValid ? null : 'Password should be 8 characters and contains number and letters',
+                        errorMaxLines: 2,
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {

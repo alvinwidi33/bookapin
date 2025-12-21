@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-    int _currentIndex = 0;
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,11 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Container(
+                      child: Material(
+                        color: Colors.transparent,
+                        child:InkWell(
+                          onTap:() => Navigator.pushNamed(context, "/detail-book"),
+                          child:Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
@@ -122,9 +126,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ],
                                   ),
-
                                   const SizedBox(height: 8),
-
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -144,6 +146,8 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
+                    ),
+                    ),
                     ),
                     SizedBox(width: 12),
                     Expanded(
@@ -239,11 +243,16 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: CurvedBottomNavBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        }
-                ),
+          if (index == _currentIndex) return;
+          if (index == 0) {
+            Navigator.pushReplacementNamed(context, '/home');
+          } else if (index == 1) {
+            Navigator.pushReplacementNamed(context, '/history');
+          } else if (index == 2) {
+            Navigator.pushReplacementNamed(context, '/profile');
+          }
+        },
+      ),
     );
   }
 }

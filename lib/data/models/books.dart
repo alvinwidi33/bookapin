@@ -44,6 +44,7 @@ class Book {
 }
 
 class BookDetails {
+  final Book book;
   final String noGm;
   final String isbn;
   final String price;
@@ -53,6 +54,7 @@ class BookDetails {
   final String format;
 
   BookDetails({
+    required this.book,
     required this.noGm,
     required this.isbn,
     required this.price,
@@ -64,6 +66,7 @@ class BookDetails {
 
   factory BookDetails.fromJson(Map<String, dynamic> json) {
     return BookDetails(
+      book:json['book'],
       noGm: json['no_gm'],
       isbn: json['isbn'],
       price: json['price'],
