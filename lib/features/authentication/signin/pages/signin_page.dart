@@ -15,6 +15,7 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   bool isVisible = false;
+  bool isPasswordValid = true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -23,6 +24,13 @@ class _SigninPageState extends State<SigninPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+  bool _isPasswordValid(String value) {
+    final hasMinLength = value.length >= 8;
+    final hasLetter = RegExp(r'[A-Za-z]').hasMatch(value);
+    final hasNumber = RegExp(r'[0-9]').hasMatch(value);
+
+    return hasMinLength && hasLetter && hasNumber;
   }
 
   @override
@@ -33,7 +41,10 @@ class _SigninPageState extends State<SigninPage> {
       listener: (context, state) {
         if (state is SignInLoading) {
         } else if (state is SignInSuccess) {
-          state.user.role == 'Customer'? Navigator.pushReplacementNamed(context, '/home') : Navigator.pushReplacementNamed(context, '/dashboard');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Hello ${state.user.username}. Welcome back!", style:AppTheme.bodyStyle)),
+          );
+          state.user.role == 'Customer' ? Navigator.pushReplacementNamed(context, '/home') : Navigator.pushReplacementNamed(context, '/dashboard');
         } else if (state is SignInError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -48,7 +59,7 @@ class _SigninPageState extends State<SigninPage> {
             Image.asset("assets/logo.png"),
             const SizedBox(height: 40),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.72,
+              width: MediaQuery.of(context).size.width * 0.84,
               child: Column(
                 children: [
                   Align(
@@ -86,7 +97,14 @@ class _SigninPageState extends State<SigninPage> {
                     child: TextField(
                       controller: passwordController,
                       obscureText: !isVisible,
+                      onChanged: (value) {
+                        setState(() {
+                          isPasswordValid = _isPasswordValid(value.trim());
+                        });
+                      },
                       decoration: AppTheme.inputDecoration("Password").copyWith(
+                        errorText: isPasswordValid ? null : 'Password should be 8 characters and contains number and letters',
+                        errorMaxLines: 2,
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -95,7 +113,7 @@ class _SigninPageState extends State<SigninPage> {
                           }, 
                           icon: Icon(
                             isVisible ? Icons.visibility_off : Icons.visibility,
-                          )
+                          ), style: ButtonStyle(iconColor: WidgetStateProperty.all(AppTheme.iconColor)),
                         )
                       ),
                     ),

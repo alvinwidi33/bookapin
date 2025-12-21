@@ -16,7 +16,22 @@ class DioApiClient {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
         },
+
+        validateStatus: (status) {
+          return status != null && status >= 200 && status < 400;
+        },
+      ),
+    );
+
+    _dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestBody: true,
+        responseBody: true,
+        error: true,
       ),
     );
   }
