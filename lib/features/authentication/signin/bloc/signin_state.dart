@@ -1,6 +1,5 @@
+import 'package:bookapin/data/models/users.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 abstract class SignInState extends Equatable {
   const SignInState();
 
@@ -13,7 +12,7 @@ class SignInInitial extends SignInState {}
 class SignInLoading extends SignInState {}
 
 class SignInSuccess extends SignInState {
-  final User user;
+  final Users user;
 
   const SignInSuccess(this.user);
 

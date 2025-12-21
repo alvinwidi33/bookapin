@@ -15,9 +15,18 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   bool isVisible = false;
+  bool isPasswordValid = true;
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  bool _isPasswordValid(String value) {
+    final hasMinLength = value.length >= 8;
+    final hasLetter = RegExp(r'[A-Za-z]').hasMatch(value);
+    final hasNumber = RegExp(r'[0-9]').hasMatch(value);
+
+    return hasMinLength && hasLetter && hasNumber;
+  }
 
   @override
   void dispose() {
@@ -34,6 +43,9 @@ class _SignupPageState extends State<SignupPage> {
       listener: (context, state) {
         if (state is SignUpLoading) {
         } else if (state is SignUpSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Success Sign up. Redirecting to Sign In Page", style:AppTheme.bodyStyle)),
+          );
           Navigator.pushReplacementNamed(context, '/signin');
         } else if (state is SignUpError) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -52,7 +64,7 @@ class _SignupPageState extends State<SignupPage> {
                 Image.asset("assets/logo.png"),
                 const SizedBox(height: 40),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.72,
+                  width: MediaQuery.of(context).size.width * 0.84,
                   child: Column(
                     children: [
                       Align(
@@ -103,25 +115,32 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(height: 16),
                       
                       Container(
-                    decoration: AppTheme.inputContainerDecoration,
-                    clipBehavior: Clip.antiAlias,
-                    child: TextField(
-                      controller: passwordController,
-                      obscureText: !isVisible,
-                      decoration: AppTheme.inputDecoration("Password").copyWith(
-                        suffixIcon: IconButton(
-                          onPressed: () {
+                        decoration: AppTheme.inputContainerDecoration,
+                        clipBehavior: Clip.antiAlias,
+                        child: TextField(
+                          controller: passwordController,
+                          obscureText: !isVisible,
+                          onChanged: (value) {
                             setState(() {
-                              isVisible = !isVisible;
+                              isPasswordValid = _isPasswordValid(value.trim());
                             });
-                          }, 
-                          icon: Icon(
-                            isVisible ? Icons.visibility_off : Icons.visibility,
-                          )
-                        )
+                          },
+                          decoration: AppTheme.inputDecoration("Password").copyWith(
+                            errorText: isPasswordValid ? null : 'Password should be 8 characters and contains number and letters',
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  isVisible = !isVisible;
+                                });
+                              }, 
+                              icon: Icon(
+                                isVisible ? Icons.visibility_off : Icons.visibility,
+                              ), style: ButtonStyle(iconColor: WidgetStateProperty.all(AppTheme.iconColor))
+                            )
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+
                       const SizedBox(height: 16),
                       
                       Row(
@@ -148,7 +167,7 @@ class _SignupPageState extends State<SignupPage> {
                         width: double.infinity,
                         height: 56,
                         child: Container(
-                          decoration: AppTheme.buttonDecoration,
+                          decoration: AppTheme.buttonDecorationPrimary,
                           child: ElevatedButton(
                             onPressed: () {
                           context.read<SignUpBloc>().add(
