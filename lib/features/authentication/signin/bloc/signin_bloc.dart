@@ -6,6 +6,21 @@ import 'signin_event.dart';
 import 'signin_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
+  String _mapFirebaseAuthError(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'invalid-credential':
+        return 'Wrong email or password';
+      case 'user-disabled':
+        return 'Your account is inactive';
+      case 'account-exists-with-different-credential':
+        return 'Your account already exists';
+      case 'network-request-failed':
+        return 'Your internet connection is bad';
+      default:
+        return 'Something went wrong. Please try again';
+    }
+  }
+
   final AuthHelper authHelper;
 
   SignInBloc(this.authHelper) : super(SignInInitial()) {
@@ -28,7 +43,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
       emit(SignInSuccess(user));
     } on FirebaseAuthException catch (e) {
-      emit(SignInError(e.message ?? 'Login failed'));
+      emit(SignInError(_mapFirebaseAuthError(e)));
     } catch (e) {
       emit(SignInError(e.toString()));
     }
