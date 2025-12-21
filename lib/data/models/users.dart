@@ -36,7 +36,6 @@ class Users {
     );
   }
 
-  /// To Firestore
   Map<String, dynamic> toFirestore() {
     return {
       'email': email,
