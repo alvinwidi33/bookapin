@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:bookapin/data/models/users.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -12,26 +14,59 @@ class AuthHelper {
   final serverClientId =
       '1074730233614-7mtg016fsqeo3925fk4m7vfnpl328hpc.apps.googleusercontent.com';
 
-  Future<UserCredential> signUpWithEmailAndPassword(
+  Future<Users> signUpWithEmailUsernameAndPassword(
+    String username,
     String email,
     String password,
   ) async {
-    UserCredential userCredential = await firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: password);
-    return userCredential;
+    final UserCredential userCredential =
+        await firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final uid = userCredential.user!.uid;
+
+    final docRef =
+        FirebaseFirestore.instance.collection('users').doc(uid);
+
+    await docRef.set({
+      'username': username,
+      'email': email,
+      'role': 'Customer', 
+      'isActive': true,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+
+    final doc = await docRef.get();
+    return Users.fromFirestore(doc);
   }
 
-  Future<UserCredential> signInWithEmailAndPassword(
+  Future<Users> signInWithEmailAndPassword(
     String email,
     String password,
   ) async {
-    UserCredential userCredential = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password);
-    return userCredential;
+    final userCredential = await firebaseAuth
+        .signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .get();
+
+    if (!doc.exists) {
+      throw Exception('User tidak ditemukan di database');
+    }
+
+    return Users.fromFirestore(doc);
   }
 
-  Future<UserCredential?> signInWithGoogle() async {
-    // Trigger the authentication flow
+
+  Future<Users> signInWithGoogle() async {
     unawaited(
       googleSignIn.initialize(
         clientId: clientId,
@@ -39,19 +74,28 @@ class AuthHelper {
       ),
     );
 
-    final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
+    final googleUser = await googleSignIn.authenticate();
+    final googleAuth = googleUser.authentication;
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-
-    // Create a new credential
-    final OAuthCredential credential = GoogleAuthProvider.credential(
+    final credential = GoogleAuthProvider.credential(
       idToken: googleAuth.idToken,
     );
 
-    // Once signed in, return the UserCredential
-    return await firebaseAuth.signInWithCredential(credential);
+    final userCredential =
+        await firebaseAuth.signInWithCredential(credential);
+
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .get();
+
+    if (!doc.exists) {
+      throw Exception('User tidak ditemukan di database');
+    }
+
+    return Users.fromFirestore(doc);
   }
+
 
   Stream<User?> checkUserSignInState() {
     final state = firebaseAuth.authStateChanges();
