@@ -1,26 +1,20 @@
 class Book {
   final String id;
   final String title;
-  final String coverImage;
-  final Author author;
-  final Category category;
-  final String summary;
-  final BookDetails details;
-  final List<Tag> tags;
-  final List<BuyLink> buyLinks;
-  final String publisher;
+  final String? coverImage;
+  final String author;
+  final String category;
+  final String? price;
+  final int pages;
 
   Book({
     required this.id,
     required this.title,
-    required this.coverImage,
+    this.coverImage,
     required this.author,
     required this.category,
-    required this.summary,
-    required this.details,
-    required this.tags,
-    required this.buyLinks,
-    required this.publisher,
+    this.price,
+    required this.pages,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
@@ -28,17 +22,16 @@ class Book {
       id: json['_id'],
       title: json['title'],
       coverImage: json['cover_image'],
-      author: Author.fromJson(json['author']),
-      category: Category.fromJson(json['category']),
-      summary: json['summary'],
-      details: BookDetails.fromJson(json['details']),
-      tags: (json['tags'] as List)
-          .map((e) => Tag.fromJson(e))
-          .toList(),
-      buyLinks: (json['buy_links'] as List)
-          .map((e) => BuyLink.fromJson(e))
-          .toList(),
-      publisher: json['publisher'],
+      author: json['author']?['name'] ?? 'Unknown Author',
+      category: json['category']?['name'] ?? 'N/A',
+      price: json['details']?['price'],
+      pages: int.tryParse(
+        json['details']?['total_pages']
+                ?.toString()
+                .split(' ')
+                .first ??
+            '0',
+      ) ?? 0,
     );
   }
 }
@@ -118,7 +111,14 @@ class BooksResponse {
   factory BooksResponse.fromJson(Map<String, dynamic> json) {
     return BooksResponse(
       books: (json['books'] as List)
-          .map((e) => Book.fromJson(e))
+          .map((e) {
+            try {
+              return Book.fromJson(e);
+            } catch (_) {
+              return null;
+            }
+          })
+          .whereType<Book>()
           .toList(),
       pagination: Pagination.fromJson(json['pagination']),
     );

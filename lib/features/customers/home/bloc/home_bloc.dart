@@ -7,26 +7,57 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final BookRepository repository;
 
   HomeBloc(this.repository) : super(HomeInitial()) {
-    on<FetchAllBooks2024>(_fetchHomes2024);
+    on<FetchAllBooks>(_fetchBooks);
+    on<LoadMoreBooks>(_loadMoreBooks);
   }
 
-  Future<void> _fetchHomes2024(
-    FetchAllBooks2024 event,
+  Future<void> _fetchBooks(
+    FetchAllBooks event,
     Emitter<HomeState> emit,
   ) async {
     emit(HomeLoading());
 
     try {
-      final response = await repository.getBooks(year: '2024', page: 1);
+      final response = await repository.getBooks(page: 1);
 
       emit(
         HomeLoaded(
-          carouselBooks: response.books.take(3).toList(),
           allBooks: response.books,
+          page: 1,
+          hasReachedMax: response.books.isEmpty,
         ),
       );
     } catch (e) {
       emit(HomeError(e.toString()));
+    }
+  }
+
+  Future<void> _loadMoreBooks(
+    LoadMoreBooks event,
+    Emitter<HomeState> emit,
+  ) async {
+    if (state is! HomeLoaded) return;
+
+    final currentState = state as HomeLoaded;
+
+    if (currentState.isLoadingMore || currentState.hasReachedMax) return;
+
+    emit(currentState.copyWith(isLoadingMore: true));
+
+    try {
+      final nextPage = currentState.page + 1;
+      final response = await repository.getBooks(page: nextPage);
+
+      emit(
+        currentState.copyWith(
+          allBooks: [...currentState.allBooks, ...response.books],
+          page: nextPage,
+          isLoadingMore: false,
+          hasReachedMax: response.books.isEmpty,
+        ),
+      );
+    } catch (e) {
+      emit(currentState.copyWith(isLoadingMore: false));
     }
   }
 }
