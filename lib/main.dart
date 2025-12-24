@@ -49,11 +49,11 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => SignUpBloc(AuthHelper()),
           ),
-          // BlocProvider(
-          //   create: (context) => HomeBloc(
-          //     context.read<BookRepository>(), 
-          //   )..add(FetchAllBooks2024()),
-          // ),
+          BlocProvider(
+            create: (context) => HomeBloc(
+              context.read<BookRepository>(), 
+            )..add(FetchAllBooks(isRefresh: true)),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
