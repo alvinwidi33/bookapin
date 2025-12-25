@@ -47,7 +47,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final currentState = state is HomeLoaded ? state as HomeLoaded : null;
 
     try {
-      // Maintain filter yang sudah aktif
       String? genreFilter;
       if (currentState != null && currentState.activeCategories.isNotEmpty) {
         genreFilter = currentState.activeCategories.join(',');
@@ -126,7 +125,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoading());
 
     try {
-      // Convert categories list to comma-separated string untuk genre parameter
       String? genreFilter;
       if (event.categories.isNotEmpty) {
         genreFilter = event.categories.join(',');
@@ -159,7 +157,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoading());
 
     try {
-      // Convert categories to genre parameter
       String? genreFilter;
       if (event.categories.isNotEmpty) {
         genreFilter = event.categories.join(',');

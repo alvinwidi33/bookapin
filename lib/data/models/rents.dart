@@ -1,24 +1,21 @@
-import 'dart:convert';
-
 import 'package:bookapin/data/models/books.dart';
 import 'package:bookapin/data/models/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Rents usersFromJson(String str) => Rents.fromJson(json.decode(str));
-
-String usersToJson(Rents data) => json.encode(data.toJson());
-
 class Rents {
-  dynamic id;
-  String book;
-  BookDetails? bookDetails;
-  String user;
-  Users? userDetails;
-  int duration;
-  double price;
-  DateTime borrowedAt;
-  bool isReturn;
-  DateTime returnedAt;
+  final String id;
+  final String book; 
+  final BookDetails? bookDetails;
+
+  final String user;
+  final Users? userDetails;
+
+  final int duration;
+  final int price;
+
+  final DateTime borrowedAt;
+  final bool isReturn;
+  final DateTime? returnedAt;
 
   Rents({
     required this.id,
@@ -30,48 +27,59 @@ class Rents {
     required this.price,
     required this.borrowedAt,
     required this.isReturn,
-    required this.returnedAt
+    this.returnedAt,
   });
 
-  factory Rents.fromJson(Map<String, dynamic> json) => Rents(
-    id: json["id"],
-    book: json["book"],
-    user: json["user"],
-    duration: json["duration"],
-    price: json["price"],
-    borrowedAt: json["borrowedAt"],
-    isReturn: json["isReturn"] == 0,
-    returnedAt: json["returnedAt"]
-  );
-
   factory Rents.fromFirestore(
-    DocumentSnapshot<Map<String,dynamic>> doc, {
-      BookDetails? bookDetails,
-      Users? userDetails
-    }) {
-      final data = doc.data()!;
-      return Rents(
-        id: doc.id,
-        book: data["book"],
-        bookDetails: bookDetails,
-        user: data["user"],
-        userDetails: userDetails,
-        duration: data["duration"],
-        price: data["price"],
-        borrowedAt: data["borrowedAt"],
-        isReturn: data["isReturn"] == 0,
-        returnedAt: data["returnedAt"]
-      );
-    }
-    
+    DocumentSnapshot<Map<String, dynamic>> doc, {
+    BookDetails? bookDetails,
+    Users? userDetails,
+  }) {
+    final data = doc.data()!;
+
+    return Rents(
+      id: doc.id,
+      book: data['book'],
+      bookDetails: bookDetails,
+      user: data['user'],
+      userDetails: userDetails,
+      duration: data['duration'],
+      price: data['price'],
+      borrowedAt: (data['borrowedAt'] as Timestamp).toDate(),
+      isReturn: data['isReturn'] as bool,
+      returnedAt: data['returnedAt'] != null
+          ? (data['returnedAt'] as Timestamp).toDate()
+          : null,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "book": book,
-    "user": user,
-    "duration": duration,
-    "price": price,
-    "borrowedAt":borrowedAt,
-    "isReturn": isReturn ? 0 : 1,
-    "returnedAt": returnedAt
+    'book': book,
+    'user': user,
+    'duration': duration,
+    'price': price,
+    'borrowedAt': Timestamp.fromDate(borrowedAt),
+    'isReturn': isReturn,
+    'returnedAt':
+        returnedAt != null ? Timestamp.fromDate(returnedAt!) : null,
   };
+}
+extension RentsCopy on Rents {
+  Rents copyWith({
+    BookDetails? bookDetails,
+    Users? userDetails,
+  }) {
+    return Rents(
+      id: id,
+      book: book,
+      bookDetails: bookDetails ?? this.bookDetails,
+      user: user,
+      userDetails: userDetails ?? this.userDetails,
+      duration: duration,
+      price: price,
+      borrowedAt: borrowedAt,
+      isReturn: isReturn,
+      returnedAt: returnedAt,
+    );
+  }
 }

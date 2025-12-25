@@ -1,8 +1,13 @@
 import 'package:bookapin/components/theme_data.dart';
 import 'package:bookapin/data/repositories/book_repository.dart';
+import 'package:bookapin/data/repositories/rent_repository.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_bloc.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_event.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_state.dart';
+import 'package:bookapin/features/customers/detail/bloc/rent_book_bloc.dart';
+import 'package:bookapin/features/customers/detail/bloc/rent_book_event.dart';
+import 'package:bookapin/features/customers/detail/bloc/rent_book_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,22 +24,68 @@ class _DetailBookState extends State<DetailBook> {
   final int pricePerDay = 5000;
   int selectedTab = 0;
 
-  @override
-  Widget build(BuildContext context) {
-  final args = ModalRoute.of(context)?.settings.arguments;
-
-  if (args == null) {
-    return const Scaffold(
-      body: Center(child: Text("Book ID not found")),
+  void showLoading(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
+  void hideLoading(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+
+    if (args == null) {
+      return const Scaffold(
+        body: Center(child: Text("Book ID not found")),
+      );
+    }
+
   final String bookId = args.toString();
 
-  return BlocProvider(
-    create: (context) => DetailBookBloc(
-      context.read<BookRepository>(),
-    )..add(FetchBookDetail(bookId)),
+  return MultiBlocProvider(
+    providers: [
+      BlocProvider(
+       create: (context) => DetailBookBloc(
+          context.read<BookRepository>(),
+        )..add(FetchBookDetail(bookId)),
+      ),
+      BlocProvider(
+      create: (context) => RentBookBloc(
+        context.read<RentRepository>(),
+      ),
+      )
+    ],
+      child: BlocListener<RentBookBloc, RentBookState>(
+      listener: (context, state) {
+        if (state is RentBookLoading) {
+          showLoading(context);
+        }
+
+        if (state is RentBookSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Rent book successful 📚")),
+          );
+          Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/history',
+        (route) => route.isFirst,
+      );
+        }
+
+        if (state is RentBookFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
       child: Scaffold(
         body: SafeArea(
           child: BlocBuilder<DetailBookBloc, DetailBookState>(
@@ -83,7 +134,6 @@ class _DetailBookState extends State<DetailBook> {
                         children: [
                           const SizedBox(height: 12),
 
-                          // Header
                           Row(
                             children: [
                               InkWell(
@@ -194,7 +244,6 @@ class _DetailBookState extends State<DetailBook> {
                               style: AppTheme.headingStyle),
                           const SizedBox(height: 8),
 
-                          // Tab Container
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -352,41 +401,51 @@ class _DetailBookState extends State<DetailBook> {
                 ],
               ),
               const SizedBox(height: 12),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to payment/rent confirmation
+              BlocBuilder<RentBookBloc, RentBookState>(
+                builder: (context, state) {
+                  final isLoading = state is RentBookLoading;
+
+                  return GestureDetector(
+                    onTap: isLoading
+                        ? null
+                        : () {
+                            final userId =
+                                FirebaseAuth.instance.currentUser!.uid;
+
+                            context.read<RentBookBloc>().add(
+                              SubmitRentBook(
+                                bookId: bookId,
+                                userId: userId,
+                                duration: qty,
+                                price: qty * pricePerDay,
+                              ),
+                            );
+                          },
+                    child: Container(
+                      height: 56,
+                      decoration: AppTheme.buttonDecorationPrimary,
+                      child: Center(
+                        child: isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                "Rent Now",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    ),
+                  );
                 },
-                child: Container(
-                  height: 56,
-                  decoration: AppTheme.buttonDecorationPrimary,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 32),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            "Rent Now",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Icon(
-                        Icons.keyboard_arrow_right,
-                        size: 32,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ],
           ),
         ),
+      ),
       ),
     );
   }
