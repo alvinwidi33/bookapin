@@ -179,7 +179,7 @@ class RentCard extends StatelessWidget {
                         Icon(Icons.monetization_on, size: 16, color:AppTheme.primaryPurple),
                         const SizedBox(width: 4),
                         Text(
-                          rent.price.toString(),
+                          'Rp. ${NumberFormat('#,###').format(rent.price)}',
                           style: AppTheme.cardBody.copyWith(color: AppTheme.primaryPurple, fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -194,7 +194,7 @@ class RentCard extends StatelessWidget {
                       horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: rent.isReturn
-                        ? Colors.green
+                        ? Colors.lightGreenAccent
                         : AppTheme.iconColor,
                     borderRadius: BorderRadius.circular(4),
                   ),

@@ -6,6 +6,7 @@ import 'package:bookapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:bookapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:bookapin/features/authentication/signup/bloc/signup_bloc.dart';
 import 'package:bookapin/features/authentication/signup/pages/signup_page.dart';
+import 'package:bookapin/features/customers/detail-rents/bloc/return_book_bloc.dart';
 import 'package:bookapin/features/customers/detail-rents/pages/detail_rent_page.dart';
 import 'package:bookapin/features/customers/detail/pages/detail_book_page.dart';
 import 'package:bookapin/features/customers/history/pages/history_page.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
               bookApi: context.read<BookRepository>(),
             ),
           ),
+
         ],
         child: MultiBlocProvider(
           providers: [
@@ -59,6 +61,11 @@ class MyApp extends StatelessWidget {
               create: (context) => HomeBloc(
                 context.read<BookRepository>(),
               )..add(FetchAllBooks(isRefresh: true)),
+            ),
+            BlocProvider(
+              create: (context) => ReturnBookBloc(
+                context.read<RentRepository>(),
+              ),
             ),
           ],
         child: MaterialApp(

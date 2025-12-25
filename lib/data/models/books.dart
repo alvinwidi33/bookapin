@@ -43,6 +43,7 @@ class BookDetails {
   final String title;
   final String? coverImage;
   final String author;
+  final String? totalPages; 
   final String category;
   final String summary;
   final String? publishedDate;
@@ -54,6 +55,7 @@ class BookDetails {
     required this.title,
     this.coverImage,
     required this.author,
+    this.totalPages,
     required this.category,
     required this.summary,
     this.publishedDate,
@@ -67,6 +69,10 @@ class BookDetails {
       title: json['title'],
       coverImage: json['cover_image'],
       author: json['author']?['name'] ?? 'Unknown',
+      totalPages: json['details']?['total_pages']
+          ?.toString()
+          .split(' ')
+          .first ?? '0',
       category: json['category']?['name'] ?? 'Unknown',
       summary: json['summary'] ?? '',
       publishedDate: json['details']?['published_date'],
@@ -83,6 +89,7 @@ class BookDetails {
       title: data['title'] ?? '',
       coverImage: data['coverImage'], 
       author: data['author'] ?? 'Unknown',
+      totalPages: data['totalPages'],
       category: data['category'] ?? 'Unknown',
       summary: data['summary'] ?? '',
       publishedDate: data['publishedDate'],
