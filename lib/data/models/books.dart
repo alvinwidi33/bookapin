@@ -37,39 +37,43 @@ class Book {
 }
 
 class BookDetails {
-  final Book book;
-  final String noGm;
-  final String isbn;
-  final String price;
-  final String totalPages;
-  final String size;
-  final String publishedDate;
-  final String format;
+  final String id;
+  final String title;
+  final String? coverImage;
+  final String author;
+  final String category;
+  final String summary;
+  final String? publishedDate;
+  final String? isbn;
+  final String? publisher;
 
   BookDetails({
-    required this.book,
-    required this.noGm,
-    required this.isbn,
-    required this.price,
-    required this.totalPages,
-    required this.size,
-    required this.publishedDate,
-    required this.format,
+    required this.id,
+    required this.title,
+    this.coverImage,
+    required this.author,
+    required this.category,
+    required this.summary,
+    this.publishedDate,
+    this.isbn,
+    this.publisher,
   });
 
   factory BookDetails.fromJson(Map<String, dynamic> json) {
     return BookDetails(
-      book:json['book'],
-      noGm: json['no_gm'],
-      isbn: json['isbn'],
-      price: json['price'],
-      totalPages: json['total_pages'],
-      size: json['size'],
-      publishedDate: json['published_date'],
-      format: json['format'],
+      id: json['_id'],
+      title: json['title'],
+      coverImage: json['cover_image'],
+      author: json['author']?['name'] ?? 'Unknown',
+      category: json['category']?['name'] ?? 'Unknown',
+      summary: json['summary'] ?? '',
+      publishedDate: json['details']?['published_date'],
+      isbn: json['details']?['isbn'],
+      publisher: json['publisher'],
     );
   }
 }
+
 
 class Author {
   final String name;

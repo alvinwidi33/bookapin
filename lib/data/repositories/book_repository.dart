@@ -36,4 +36,20 @@ class BookRepository {
       throw Exception('Failed: $e');
     }
   }
+   Future<BookDetails> getBookById(String id) async {
+  try {
+    final response = await dio.get('/api/v1/book/$id');
+
+    final data = response.data;
+
+    if (data == null) {
+      throw Exception('Book not found');
+    }
+
+    return BookDetails.fromJson(data);
+  } catch (e) {
+    throw Exception('getBookById error: $e');
+  }
+}
+
 }
