@@ -1,6 +1,7 @@
 import 'package:bookapin/components/theme_data.dart';
 import 'package:bookapin/data/network/dio_client_api.dart';
 import 'package:bookapin/data/repositories/book_repository.dart';
+import 'package:bookapin/data/repositories/rent_repository.dart';
 import 'package:bookapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:bookapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:bookapin/features/authentication/signup/bloc/signup_bloc.dart';
@@ -35,26 +36,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<BookRepository>(
-          create: (_) => BookRepository(
-            DioApiClient().dio, 
+          RepositoryProvider<BookRepository>(
+            create: (_) => BookRepository(
+              DioApiClient().dio,
+            ),
           ),
-        ),
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (_) => SignInBloc(AuthHelper()),
-          ),
-          BlocProvider(
-            create: (_) => SignUpBloc(AuthHelper()),
-          ),
-          BlocProvider(
-            create: (context) => HomeBloc(
-              context.read<BookRepository>(), 
-            )..add(FetchAllBooks(isRefresh: true)),
+          RepositoryProvider<RentRepository>(
+            create: (context) => RentRepository(
+              bookApi: context.read<BookRepository>(),
+            ),
           ),
         ],
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => SignInBloc(AuthHelper()),
+            ),
+            BlocProvider(
+              create: (_) => SignUpBloc(AuthHelper()),
+            ),
+            BlocProvider(
+              create: (context) => HomeBloc(
+                context.read<BookRepository>(),
+              )..add(FetchAllBooks(isRefresh: true)),
+            ),
+          ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,

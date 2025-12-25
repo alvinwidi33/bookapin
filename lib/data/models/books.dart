@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Book {
   final String id;
   final String title;
@@ -72,8 +74,23 @@ class BookDetails {
       publisher: json['publisher'],
     );
   }
-}
+  factory BookDetails.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data()!;
 
+    return BookDetails(
+      id: doc.id,
+      title: data['title'] ?? '',
+      coverImage: data['coverImage'], 
+      author: data['author'] ?? 'Unknown',
+      category: data['category'] ?? 'Unknown',
+      summary: data['summary'] ?? '',
+      publishedDate: data['publishedDate'],
+      isbn: data['isbn'],
+      publisher: data['publisher'],
+    );
+  }
+}
 
 class Author {
   final String name;
