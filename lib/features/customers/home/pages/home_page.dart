@@ -494,7 +494,7 @@ class _BookCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          'Rp 5000/day',
+                          'Rp 5,000/day',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTheme.cardBody.copyWith(

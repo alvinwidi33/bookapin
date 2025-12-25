@@ -29,10 +29,10 @@ class RentRepository {
   
 Future<List<Rents>> getUserRents(String userId) async {
     final rentQuery = await _firestore
-        .collection('rents')
-        .where('user', isEqualTo: userId)
-        .orderBy('borrowedAt', descending: true)
-        .get();
+      .collection('rents')
+      .where('user', isEqualTo: userId)
+      .orderBy('borrowedAt', descending: true)
+      .get();
 
     final Map<String, BookDetails> bookCache = {};
     List<Rents> result = [];
@@ -40,7 +40,6 @@ Future<List<Rents>> getUserRents(String userId) async {
     for (final doc in rentQuery.docs) {
       final rent = Rents.fromFirestore(doc);
 
-      // 🔹 fetch book only once
       if (!bookCache.containsKey(rent.book)) {
         bookCache[rent.book] =
             await _bookApi.getBookById(rent.book);
@@ -54,5 +53,32 @@ Future<List<Rents>> getUserRents(String userId) async {
     }
 
     return result;
+  }
+  Future<Rents> getRentById(String rentId) async {
+    final doc = await _firestore
+        .collection('rents')
+        .doc(rentId)
+        .get();
+
+    if (!doc.exists) {
+      throw Exception('Rent not found');
+    }
+
+    final rent = Rents.fromFirestore(doc);
+    final bookDetails = await _bookApi.getBookById(rent.book);
+    return rent.copyWith(
+      bookDetails: bookDetails,
+    );
+  }
+
+  Future<void> returnBook(String rentId, int fine) async {
+    await _firestore
+      .collection('rents')
+      .doc(rentId)
+      .update({
+        'isReturn': true,
+        'fine':fine,
+        'returnedAt': Timestamp.now(),
+      });
   }
 }
