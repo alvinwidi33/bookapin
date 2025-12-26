@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bookapin/data/models/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthHelper {
@@ -66,44 +67,58 @@ class AuthHelper {
   }
 
 
-  Future<Users> signInWithGoogle() async {
-    unawaited(
-      googleSignIn.initialize(
-        clientId: clientId,
-        serverClientId: serverClientId,
-      ),
-    );
+    Future<Users> signInWithGoogle() async {
+      final googleProvider = GoogleAuthProvider();
 
-    final googleUser = await googleSignIn.authenticate();
-    final googleAuth = googleUser.authentication;
+      final UserCredential result =
+          await FirebaseAuth.instance.signInWithPopup(googleProvider);
 
-    final credential = GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken,
-    );
+      final User firebaseUser = result.user!;
+      final uid = firebaseUser.uid;
 
-    final userCredential =
-        await firebaseAuth.signInWithCredential(credential);
+      final usersRef =
+          FirebaseFirestore.instance.collection('users').doc(uid);
 
-    final doc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userCredential.user!.uid)
-        .get();
+      final doc = await usersRef.get();
 
-    if (!doc.exists) {
-      throw Exception('User tidak ditemukan di database');
+      if (!doc.exists) {
+        await usersRef.set({
+          'username': firebaseUser.displayName ?? '',
+          'email': firebaseUser.email,
+          'role': 'Customer',
+          'isActive': true,
+          'createdAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      final savedDoc = await usersRef.get();
+      return Users.fromFirestore(savedDoc);
     }
 
-    return Users.fromFirestore(doc);
-  }
 
+    Stream<User?> checkUserSignInState() {
+      final state = firebaseAuth.authStateChanges();
+      return state;
+    }
 
-  Stream<User?> checkUserSignInState() {
-    final state = firebaseAuth.authStateChanges();
-    return state;
-  }
+  signOut() async {
+    final user = firebaseAuth.currentUser;
 
-  signOut() {
-    googleSignIn.signOut();
-    firebaseAuth.signOut();
+    if (user != null) {
+      final isGoogleUser = user.providerData.any(
+        (p) => p.providerId == 'google.com',
+      );
+
+      if (isGoogleUser) {
+        if (kIsWeb) {
+          await googleSignIn.signOut();
+        } else {
+          await googleSignIn.disconnect();
+        }
+      }
+    }
+
+    await firebaseAuth.signOut();
   }
 }
