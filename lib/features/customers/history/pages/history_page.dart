@@ -1,7 +1,6 @@
 import 'package:bookapin/components/navbar.dart';
 import 'package:bookapin/components/theme_data.dart';
 import 'package:bookapin/data/models/rents.dart';
-import 'package:bookapin/data/repositories/rent_repository.dart';
 import 'package:bookapin/features/customers/history/bloc/rent_history_bloc.dart';
 import 'package:bookapin/features/customers/history/bloc/rent_history_event.dart';
 import 'package:bookapin/features/customers/history/bloc/rent_history_state.dart';
@@ -52,8 +51,8 @@ class HistoryUI extends StatelessWidget {
 
             if (state is RentHistoryLoaded) {
               if (state.rents.isEmpty) {
-                return const Center(
-                  child: Text("No rent history yet 📭"),
+                return Center(
+                  child: Text("No rent history yet 📭", style:AppTheme.subtitleDetail),
                 );
               }
 

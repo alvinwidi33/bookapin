@@ -209,3 +209,19 @@ class Pagination {
     );
   }
 }
+class GenreStatistic {
+  final String? genre;
+  final int count;
+
+  GenreStatistic({
+    required this.genre,
+    required this.count,
+  });
+
+  factory GenreStatistic.fromJson(Map<String, dynamic> json) {
+    return GenreStatistic(
+      genre: json['genre'],
+      count: json['count'],
+    );
+  }
+}

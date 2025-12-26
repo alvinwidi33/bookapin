@@ -61,7 +61,6 @@ class _HomePageState extends State<HomePage> {
         child: BookFilterSheet(
           selectedCategories: currentState.activeCategories,
           onApplyFilter: (categories) {
-            // Gunakan BLoC untuk apply filter
             context.read<HomeBloc>().add(
                   ApplyFilter(
                     categories: categories
@@ -333,7 +332,6 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          // Search keyword chip
           if (state.searchKeyword.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -359,7 +357,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-          // Category chips
           ...state.activeCategories.map((category) {
             return Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -387,7 +384,6 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           }),
-          // Clear all button
           if (state.activeCategories.isNotEmpty || state.searchKeyword.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(left: 8),

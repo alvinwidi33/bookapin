@@ -209,8 +209,6 @@ class _BookFilterSheetState extends State<BookFilterSheet> {
     );
   }
 
-
-
   Widget _buildActionButtons() {
     return Row(
       children: [

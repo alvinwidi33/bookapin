@@ -51,5 +51,18 @@ class BookRepository {
     throw Exception('getBookById error: $e');
   }
 }
+  Future<List<GenreStatistic>> getGenreStatistics() async {
+    try {
+      final response = await dio.get('/api/v1/stats/genre');
 
+      final List list =
+          response.data['genre_statistics'] as List;
+
+      return list
+          .map((e) => GenreStatistic.fromJson(e))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to get genre statistics');
+    }
+  }
 }
