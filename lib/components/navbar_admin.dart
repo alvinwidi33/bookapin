@@ -1,11 +1,11 @@
 import 'package:bookapin/components/theme_data.dart';
 import 'package:flutter/material.dart';
 
-class CurvedBottomNavBar extends StatelessWidget {
+class CurvedBottomNavBarAdmin extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  const CurvedBottomNavBar({
+  const CurvedBottomNavBarAdmin({
     super.key,
     required this.currentIndex,
     required this.onTap,

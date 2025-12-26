@@ -1,102 +1,135 @@
-import 'package:bookapin/components/navbar.dart';
 import 'package:bookapin/components/theme_data.dart';
 import 'package:bookapin/data/models/rents.dart';
-import 'package:bookapin/features/customers/history/bloc/rent_history_bloc.dart';
-import 'package:bookapin/features/customers/history/bloc/rent_history_event.dart';
-import 'package:bookapin/features/customers/history/bloc/rent_history_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bookapin/features/admin/rents-user/bloc/rent_users_bloc.dart';
+import 'package:bookapin/features/admin/rents-user/bloc/rent_users_event.dart';
+import 'package:bookapin/features/admin/rents-user/bloc/rent_users_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+class RentUsersPage extends StatefulWidget {
+  const RentUsersPage({super.key});
 
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  State<RentUsersPage> createState() => _RentUsersPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _RentUsersPageState extends State<RentUsersPage> {
+  bool _loaded = false;
+  late String userId;
+  late String username;
+
   @override
-  void initState() {
-    super.initState();
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-    context.read<RentHistoryBloc>().add(FetchRentHistory(userId));
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_loaded) return;
+
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    userId = args['userId'] as String;
+    username = args['username'] as String;
+
+    context.read<RentUsersBloc>().add(FetchRentUsers(userId));
+
+    _loaded = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return const HistoryUI(currentIndex: 1);
+    return RentUsersUI(
+      currentIndex: 1,
+      user: username,
+    );
   }
 }
 
 
-class HistoryUI extends StatelessWidget {
-  const HistoryUI({
+class RentUsersUI extends StatelessWidget {
+  final int currentIndex;
+  final String user;
+
+  const RentUsersUI({
     super.key,
-    required int currentIndex,
-  }) : _currentIndex = currentIndex;
-
-  final int _currentIndex;
+    required this.currentIndex,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: SafeArea(
-        child: BlocBuilder<RentHistoryBloc, RentHistoryState>(
+        child: BlocBuilder<RentUsersBloc, RentUsersState>(
           builder: (context, state) {
-            if (state is RentHistoryLoading) {
+            if (state is RentUsersLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             }
 
-            if (state is RentHistoryError) {
+            if (state is RentUsersError) {
               return Center(child: Text(state.message));
             }
 
-            if (state is RentHistoryLoaded) {
-              if (state.rents.isEmpty) {
-                return Center(
-                  child: Text("No rent history yet 📭", style:AppTheme.subtitleDetail),
-                );
-              }
-
-              return ListView(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+            if (state is RentUsersLoaded) {
+              return Stack(
                 children: [
-                  const SizedBox(height: 12),
-                  Text(
-                    "My Rents",
-                    style: AppTheme.headingStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-
-                  ...state.rents.map(
-                    (rent) => RentCard(rent: rent),
+                  state.rents.isEmpty
+                      ? Center(
+                          child: Text(
+                            "No rent history yet 📭",
+                            style: AppTheme.subtitleDetail,
+                          ),
+                        )
+                      : ListView(
+                          padding: const EdgeInsets.only(top: 20),
+                          children: [
+                            Text(
+                              "$user Rents",
+                              style: AppTheme.headingStyle,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 24),
+                            ...state.rents.map(
+                              (rent) => RentCard(rent: rent),
+                            ),
+                          ],
+                        ),
+                  Positioned(
+                    top: 12,
+                    left: 16,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppTheme.googleBlue,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.googleBlue.withValues(alpha: 0.24),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               );
             }
-
             return const SizedBox();
           },
         ),
-      ),
-      bottomNavigationBar: CurvedBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          if (index == _currentIndex) return;
-
-          if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/home');
-          } else if (index == 1) {
-            Navigator.pushReplacementNamed(context, '/history');
-          } else if (index == 2) {
-            Navigator.pushReplacementNamed(context, '/profile');
-          }
-        },
       ),
     );
   }
@@ -112,11 +145,6 @@ class RentCard extends StatelessWidget {
     return Align(
       alignment: Alignment.center,
       child: InkWell(
-        onTap: () => Navigator.pushNamed(
-          context,
-          '/detail-rent',
-          arguments: rent.id,
-        ),
         child: Container(
           width: MediaQuery.of(context).size.width * 0.92,
           margin: const EdgeInsets.only(bottom: 16),
