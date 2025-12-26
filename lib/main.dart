@@ -9,6 +9,8 @@ import 'package:bookapin/features/authentication/signup/pages/signup_page.dart';
 import 'package:bookapin/features/customers/detail-rents/bloc/return_book_bloc.dart';
 import 'package:bookapin/features/customers/detail-rents/pages/detail_rent_page.dart';
 import 'package:bookapin/features/customers/detail/pages/detail_book_page.dart';
+import 'package:bookapin/features/customers/history/bloc/rent_history_bloc.dart';
+import 'package:bookapin/features/customers/history/bloc/rent_history_event.dart';
 import 'package:bookapin/features/customers/history/pages/history_page.dart';
 import 'package:bookapin/features/customers/home/bloc/home_bloc.dart';
 import 'package:bookapin/features/customers/home/bloc/home_event.dart';
@@ -61,6 +63,11 @@ class MyApp extends StatelessWidget {
               create: (context) => HomeBloc(
                 context.read<BookRepository>(),
               )..add(FetchAllBooks(isRefresh: true)),
+            ),
+            BlocProvider(
+              create: (context) => RentHistoryBloc(
+                context.read<RentRepository>(),
+              )
             ),
             BlocProvider(
               create: (context) => ReturnBookBloc(
