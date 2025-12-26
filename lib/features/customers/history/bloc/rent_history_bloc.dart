@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'rent_history_event.dart';
 import 'rent_history_state.dart';
 
-class RentHistoryBloc
-    extends Bloc<RentHistoryEvent, RentHistoryState> {
+class RentHistoryBloc extends Bloc<RentHistoryEvent, RentHistoryState> {
   final RentRepository repository;
 
   RentHistoryBloc(this.repository)

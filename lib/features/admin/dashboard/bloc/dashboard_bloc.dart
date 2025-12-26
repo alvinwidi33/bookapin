@@ -7,7 +7,7 @@ class DashboardBloc
     extends Bloc<DashboardEvent, DashboardState> {
   final BookRepository bookRepository;
 
-  DashboardBloc({required this.bookRepository})
+  DashboardBloc(this.bookRepository)
       : super(DashboardInitial()) {
     on<LoadDashboardStats>(_onLoadDashboardStats);
   }

@@ -1,13 +1,14 @@
 import 'package:bookapin/components/theme_data.dart';
 import 'package:bookapin/data/repositories/book_repository.dart';
 import 'package:bookapin/data/repositories/rent_repository.dart';
+import 'package:bookapin/features/authentication/signin/bloc/signin_bloc.dart';
+import 'package:bookapin/features/authentication/signin/bloc/signin_state.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_bloc.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_event.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_state.dart';
 import 'package:bookapin/features/customers/detail/bloc/rent_book_bloc.dart';
 import 'package:bookapin/features/customers/detail/bloc/rent_book_event.dart';
 import 'package:bookapin/features/customers/detail/bloc/rent_book_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -407,53 +408,60 @@ class _DetailBookState extends State<DetailBook> {
                 ),
                 const SizedBox(height: 12),
                 BlocBuilder<RentBookBloc, RentBookState>(
-                  builder: (context, state) {
-                    final isLoading = state is RentBookLoading;
+                  builder: (context, rentState) {
+                    final isLoading = rentState is RentBookLoading;
+                    return BlocBuilder<SignInBloc, SignInState>(
+                      builder: (context, signInState) {
+                        final bool isDisabled =
+                            signInState is! SignInSuccess ||
+                            !signInState.user.isActive ||
+                            isLoading;
 
-                    return GestureDetector(
-                      onTap: isLoading
-                          ? null
-                          : () {
-                              final userId =
-                                  FirebaseAuth.instance.currentUser!.uid;
-
-                              context.read<RentBookBloc>().add(
-                                SubmitRentBook(
-                                  bookId: bookId,
-                                  userId: userId,
-                                  duration: qty,
-                                  price: qty * pricePerDay,
-                                ),
-                              );
-                            },
-                      child: Container(
-                        height: 56,
-                        decoration: AppTheme.buttonDecorationPrimary,
-                        child: Center(
-                          child: isLoading
-                              ? const CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
-                              : const Text(
-                                  "Rent Now",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                        ),
-                      ),
+                        return GestureDetector(
+                          onTap: isDisabled
+                              ? null
+                              : () {
+                                  final user = (signInState).user;
+                                  context.read<RentBookBloc>().add(
+                                        SubmitRentBook(
+                                          bookId: bookId,
+                                          userId: user.id!,
+                                          duration: qty,
+                                          price: qty * pricePerDay,
+                                        ),
+                                      );
+                                },
+                          child: Container(
+                            height: 56,
+                            decoration: isDisabled
+                                ? AppTheme.buttonDecorationDisabled
+                                : AppTheme.buttonDecorationPrimary,
+                            child: Center(
+                              child: isLoading
+                                  ? const CircularProgressIndicator(color: Colors.white)
+                                  : const Text(
+                                      "Rent Now",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
-                ),
-              ],
+                )
+
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
   Widget _buildNoCover() {
     return Column(

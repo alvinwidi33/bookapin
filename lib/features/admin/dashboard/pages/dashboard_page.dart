@@ -164,7 +164,6 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       const SizedBox(height: 32),
 
-                      // Top 10 Genres Chart
                       Text(
                         'Top 10 Most Popular Genres',
                         style: AppTheme.headingStyle.copyWith(
@@ -318,7 +317,7 @@ class _DashboardPageState extends State<DashboardPage> {
           return const SizedBox.shrink();
         },
       ),
-      bottomNavigationBar: CurvedBottomNavBar(
+      bottomNavigationBar: CurvedBottomNavBarAdmin(
         currentIndex: _currentIndex,
         onTap: (index) {
           if (index == _currentIndex) return;
@@ -377,12 +376,6 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildPieChart(List<GenreData> data, int total) {
-    return CustomPaint(
-      painter: PieChartPainter(data, total),
-      child: Container(),
-    );
-  }
 
   Color _getGradientColor(double percentage) {
     return Color.lerp(

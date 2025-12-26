@@ -200,8 +200,8 @@ class _HomePageState extends State<HomePage> {
                                       const AlwaysScrollableScrollPhysics(),
                                   padding: const EdgeInsets.only(bottom: 8),
                                   gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 200, 
                                     crossAxisSpacing: 12,
                                     mainAxisSpacing: 12,
                                     childAspectRatio: 0.72,
@@ -280,7 +280,6 @@ class _HomePageState extends State<HomePage> {
                 }
               },
               onChanged: (value) {
-                // Auto search saat user berhenti mengetik (debounce)
                 if (value.isEmpty) {
                   context.read<HomeBloc>().add(
                         state?.hasActiveFilter == true

@@ -19,7 +19,6 @@ class Users {
     required this.updatedAt,
   });
 
-  /// From Firestore
   factory Users.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
