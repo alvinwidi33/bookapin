@@ -10,28 +10,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class HistoryPage extends StatefulWidget {
+class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
-
-  @override
-  State<HistoryPage> createState() => _HistoryPageState();
-}
-
-class _HistoryPageState extends State<HistoryPage> {
-  final int _currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
-    return BlocProvider(
-      create: (context) => RentHistoryBloc(
-        context.read<RentRepository>(),
-      )..add(FetchRentHistory(userId)),
-      child: HistoryUI(currentIndex: _currentIndex),
+    context.read<RentHistoryBloc>().add(
+      FetchRentHistory(userId),
     );
+
+    return const HistoryUI(currentIndex: 1);
   }
 }
+
 
 class HistoryUI extends StatelessWidget {
   const HistoryUI({
