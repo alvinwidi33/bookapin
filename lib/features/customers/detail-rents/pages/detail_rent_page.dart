@@ -196,14 +196,18 @@ class _DetailRentState extends State<DetailRent> {
                     const SizedBox(height: 12),
 
                     GestureDetector(
-                      onTap: () {
-                        context.read<ReturnBookBloc>().add(
-                          SubmitReturnBook(rentId: rent.id, fine: fine),
-                        );
-                      },
+                      onTap: rent.isReturn == true
+                          ? null
+                          : () {
+                              context.read<ReturnBookBloc>().add(
+                                SubmitReturnBook(rentId: rent.id, fine: fine),
+                              );
+                            },
                       child: Container(
                         height: 56,
-                        decoration: AppTheme.buttonDecorationPrimary,
+                        decoration: rent.isReturn == true
+                            ? AppTheme.buttonDecorationDisabled
+                            : AppTheme.buttonDecorationPrimary,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Row(
                           children: [
@@ -213,22 +217,22 @@ class _DetailRentState extends State<DetailRent> {
                                 child: Text(
                                   "Book Returned",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: rent.isReturn == true ? Colors.grey.shade600 : Colors.white,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.keyboard_arrow_right,
                               size: 32,
-                              color: Colors.white,
+                              color: rent.isReturn == true ? Colors.grey.shade600 : Colors.white,
                             ),
                           ],
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               );

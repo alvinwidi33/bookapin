@@ -62,6 +62,10 @@ class AppTheme {
       ),
     );
   }
+static BoxDecoration buttonDecorationDisabled = BoxDecoration(
+  color: Colors.grey.shade300,
+  borderRadius: BorderRadius.circular(20),
+);
 
   static BoxDecoration inputContainerDecoration = BoxDecoration(
     color: Colors.white,
