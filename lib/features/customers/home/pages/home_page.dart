@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    context.read<HomeBloc>().add(FetchAllBooks());
+    context.read<HomeBloc>().add(const FetchAllBooks());
   }
 
   @override
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     final state = context.read<HomeBloc>().state;
 
     if (_isBottom && state is HomeLoaded && !state.isLoadingMore) {
-      context.read<HomeBloc>().add(LoadMoreBooks());
+      context.read<HomeBloc>().add(const LoadMoreBooks());
     }
   }
 
@@ -60,12 +60,16 @@ class _HomePageState extends State<HomePage> {
         ),
         child: BookFilterSheet(
           selectedCategories: currentState.activeCategories,
-          onApplyFilter: (categories) {
+          selectedYear: currentState.activeYear,
+          selectedSort: currentState.sortBy,
+          onApplyFilter: (categories, year, sort) {
             context.read<HomeBloc>().add(
-                  ApplyFilter(
-                    categories: categories
-                  ),
-                );
+              ApplyFilterAndSort(
+                categories: categories,
+                year: year,
+                sortKey: sort,
+              ),
+            );
           },
         ),
       ),
@@ -83,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             width: screenWidth,
             child: Column(
               children: [
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 BlocBuilder<HomeBloc, HomeState>(
                   builder: (context, state) {
                     return _buildSearchBar(
@@ -93,8 +97,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 BlocBuilder<HomeBloc, HomeState>(
                   builder: (context, state) {
-                    if (state is HomeLoaded && 
-                        (state.activeCategories.isNotEmpty || state.searchKeyword.isNotEmpty)) {
+                    if (state is HomeLoaded && state.hasActiveFilter) {
                       return Column(
                         children: [
                           const SizedBox(height: 16),
@@ -118,22 +121,22 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.error_outline,
+                              const Icon(Icons.error_outline,
                                   size: 64, color: Colors.red),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
                               Text(
                                 'Error: ${state.message}',
-                                style: TextStyle(color: Colors.red),
+                                style: const TextStyle(color: Colors.red),
                                 textAlign: TextAlign.center,
                               ),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
                               ElevatedButton(
                                 onPressed: () {
                                   context.read<HomeBloc>().add(
-                                        FetchAllBooks(isRefresh: true),
+                                        const FetchAllBooks(isRefresh: true),
                                       );
                                 },
-                                child: Text('Retry'),
+                                child: const Text('Retry'),
                               ),
                             ],
                           ),
@@ -164,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                                   const SizedBox(height: 16),
                                   TextButton(
                                     onPressed: () {
-                                      context.read<HomeBloc>().add(ClearFilter());
+                                      context.read<HomeBloc>().add(const ClearFilter());
                                     },
                                     child: Text(
                                       'Clear Filters',
@@ -185,9 +188,14 @@ class _HomePageState extends State<HomePage> {
                                       categories: state.activeCategories,
                                     ),
                                   );
+                              if (state.activeYear != null) {
+                                context.read<HomeBloc>().add(
+                                      FilterByYear(year: state.activeYear),
+                                    );
+                              }
                             } else {
                               context.read<HomeBloc>().add(
-                                    FetchAllBooks(isRefresh: true),
+                                    const FetchAllBooks(isRefresh: true),
                                   );
                             }
                           },
@@ -200,8 +208,8 @@ class _HomePageState extends State<HomePage> {
                                       const AlwaysScrollableScrollPhysics(),
                                   padding: const EdgeInsets.only(bottom: 8),
                                   gridDelegate:
-                                    const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 200, 
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 200,
                                     crossAxisSpacing: 12,
                                     mainAxisSpacing: 12,
                                     childAspectRatio: 0.72,
@@ -225,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       }
 
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     },
                   ),
                 ),
@@ -251,7 +259,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSearchBar(HomeLoaded? state) {
-    final filterCount = state?.activeCategories.length ?? 0;
+    final filterCount = (state?.activeCategories.length ?? 0) +
+        (state?.activeYear != null ? 1 : 0) +
+        (state?.sortBy != null ? 1 : 0);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -286,38 +296,43 @@ class _HomePageState extends State<HomePage> {
                             ? ApplyFilter(
                                 categories: state!.activeCategories,
                               )
-                            : FetchAllBooks(),
+                            : const FetchAllBooks(),
                       );
                 }
               },
             ),
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
+        // Combined Filter & Sort button
         InkWell(
           onTap: state != null ? () => _showFilterSheet(state) : null,
           borderRadius: BorderRadius.circular(12),
           child: Container(
             decoration: BoxDecoration(
-              color: AppTheme.googleBlue,
+              gradient: LinearGradient(
+                colors: [AppTheme.googleBlue, AppTheme.primaryPurple],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.googleBlue.withValues(alpha: 0.24),
+                  color: AppTheme.primaryPurple.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             child: Badge(
               isLabelVisible: filterCount > 0,
-              backgroundColor: AppTheme.iconColor,
+              backgroundColor: Colors.red,
               label: Text(
                 '$filterCount',
-                style: TextStyle(fontSize: 10, color: Colors.white),
+                style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
               ),
-              child: Icon(Icons.filter_list, size: 32, color: Colors.white),
+              child: const Icon(Icons.tune, size: 28, color: Colors.white),
             ),
           ),
         ),
@@ -331,31 +346,82 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
+          // Search keyword chip
           if (state.searchKeyword.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Chip(
-                avatar: Icon(Icons.search, size: 16, color: Colors.white),
+                avatar: const Icon(Icons.search, size: 16, color: Colors.white),
                 label: Text(
                   state.searchKeyword,
                   style: AppTheme.cardBody.copyWith(color: Colors.white),
                 ),
                 backgroundColor: AppTheme.googleBlue,
-                deleteIcon: Icon(Icons.close, size: 16, color: Colors.white),
+                deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white),
                 onDeleted: () {
                   _searchController.clear();
-                  if (state.activeCategories.isEmpty) {
-                    context.read<HomeBloc>().add(FetchAllBooks());
+                  if (state.activeCategories.isEmpty && state.activeYear == null) {
+                    context.read<HomeBloc>().add(const FetchAllBooks());
                   } else {
                     context.read<HomeBloc>().add(
-                          ApplyFilter(
-                            categories: state.activeCategories
-                          ),
+                          ApplyFilter(categories: state.activeCategories),
                         );
+                    if (state.activeYear != null) {
+                      context.read<HomeBloc>().add(
+                            FilterByYear(year: state.activeYear),
+                          );
+                    }
                   }
                 },
               ),
             ),
+          // Year filter chip
+          if (state.activeYear != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Chip(
+                avatar: const Icon(Icons.calendar_today, size: 16, color: Colors.white),
+                label: Text(
+                  'Year: ${state.activeYear}',
+                  style: AppTheme.cardBody.copyWith(color: Colors.white),
+                ),
+                backgroundColor: Colors.orange,
+                deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white),
+                onDeleted: () {
+                  context.read<HomeBloc>().add(const FilterByYear(year: null));
+                },
+              ),
+            ),
+          // Sort chip
+          if (state.sortBy != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Chip(
+                avatar: const Icon(Icons.sort, size: 16, color: Colors.white),
+                label: Text(
+                  state.sortBy == 'newest' ? 'Newest' : 'Oldest',
+                  style: AppTheme.cardBody.copyWith(color: Colors.white),
+                ),
+                backgroundColor: AppTheme.primaryPurple,
+                deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white),
+                onDeleted: () {
+                  // Refresh without sort
+                  if (state.hasActiveFilter) {
+                    context.read<HomeBloc>().add(
+                          ApplyFilter(categories: state.activeCategories),
+                        );
+                    if (state.activeYear != null) {
+                      context.read<HomeBloc>().add(
+                            FilterByYear(year: state.activeYear),
+                          );
+                    }
+                  } else {
+                    context.read<HomeBloc>().add(const FetchAllBooks());
+                  }
+                },
+              ),
+            ),
+          // Category chips
           ...state.activeCategories.map((category) {
             return Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -365,31 +431,33 @@ class _HomePageState extends State<HomePage> {
                   style: AppTheme.cardBody.copyWith(color: Colors.white),
                 ),
                 backgroundColor: AppTheme.primaryPurple,
-                deleteIcon: Icon(Icons.close, size: 16, color: Colors.white),
+                deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white),
                 onDeleted: () {
-                  final updatedCategories = List<String>.from(state.activeCategories)
-                    ..remove(category);
-                  
-                  if (updatedCategories.isEmpty && state.searchKeyword.isEmpty) {
-                    context.read<HomeBloc>().add(ClearFilter());
+                  final updatedCategories =
+                      List<String>.from(state.activeCategories)
+                        ..remove(category);
+
+                  if (updatedCategories.isEmpty &&
+                      state.searchKeyword.isEmpty &&
+                      state.activeYear == null) {
+                    context.read<HomeBloc>().add(const ClearFilter());
                   } else {
                     context.read<HomeBloc>().add(
-                          ApplyFilter(
-                            categories: updatedCategories
-                          ),
+                          ApplyFilter(categories: updatedCategories),
                         );
                   }
                 },
               ),
             );
           }),
-          if (state.activeCategories.isNotEmpty || state.searchKeyword.isNotEmpty)
+          // Clear all button
+          if (state.hasActiveFilter)
             Padding(
               padding: const EdgeInsets.only(left: 8),
               child: TextButton(
                 onPressed: () {
                   _searchController.clear();
-                  context.read<HomeBloc>().add(ClearFilter());
+                  context.read<HomeBloc>().add(const ClearFilter());
                 },
                 child: Text(
                   'Clear All',
@@ -444,7 +512,7 @@ class _BookCard extends StatelessWidget {
                         ? Image.network(
                             book.coverImage!,
                             fit: BoxFit.contain,
-                            errorBuilder: (_, _, _) => _noImage(),
+                            errorBuilder: (_, _, __) => _noImage(),
                           )
                         : _noImage(),
                   ),
@@ -510,9 +578,9 @@ class _BookCard extends StatelessWidget {
   }
 
   Widget _noImage() {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         Icon(Icons.image_not_supported_outlined,
             size: 40, color: Colors.grey),
         SizedBox(height: 6),
