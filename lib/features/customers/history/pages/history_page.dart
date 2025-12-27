@@ -134,17 +134,17 @@ class RentCard extends StatelessWidget {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.all(10.8),
+                padding: const EdgeInsets.all(12),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
                     rent.bookDetails?.coverImage ?? '',
-                    width: 48,
-                    height: 72,
+                    width: 54,
+                    height: 80,
                     fit: BoxFit.cover,
                     errorBuilder: (_, _, _) => Container(
-                      width: 48,
-                      height: 72,
+                      width: 54,
+                      height: 80,
                       color: Colors.grey[300],
                     ),
                   ),
@@ -154,26 +154,33 @@ class RentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 6),
                     Text(
                       rent.bookDetails?.title ?? "Unknown Book",                      
                       style: AppTheme.cardTitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       rent.bookDetails?.category ?? "-",
                       style: AppTheme.cardBody,
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(Icons.access_time_filled, size: 16, color:AppTheme.googleBlue),
                         const SizedBox(width: 4),
                         Text(
-                          DateFormat('MMM dd yyyy')
+                          DateFormat('MMM dd yyyy hh:mm:ss')
                               .format(rent.borrowedAt),
                           style: AppTheme.cardBody,
                         ),
-                        const SizedBox(width: 12),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
                         Icon(Icons.monetization_on, size: 16, color:AppTheme.primaryPurple),
                         const SizedBox(width: 4),
                         Text(
@@ -182,11 +189,12 @@ class RentCard extends StatelessWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 6),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.only(right: 12, left:8),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 8, vertical: 4),
