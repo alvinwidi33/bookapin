@@ -1,15 +1,32 @@
 import 'package:bookapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:bookapin/features/customers/home/pages/home_page.dart';
 import 'package:bookapin/features/profile/bloc/profile_bloc.dart';
+import 'package:bookapin/features/profile/bloc/profile_event.dart';
 import 'package:bookapin/features/profile/bloc/profile_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AdminGuard extends StatelessWidget {
+class AdminGuard extends StatefulWidget {
   final Widget child;
-
   const AdminGuard({super.key, required this.child});
+
+  @override
+  State<AdminGuard> createState() => _AdminGuardState();
+}
+
+class _AdminGuardState extends State<AdminGuard> {
+  @override
+  void initState() {
+    super.initState();
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      context.read<ProfileBloc>().add(
+        LoadProfile(userId: user.uid),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +49,11 @@ class AdminGuard extends StatelessWidget {
         if (state is ProfileLoaded) {
           final role = state.user.role.toLowerCase();
           if (role != 'admin') {
-            return const HomePage(); 
+            return const HomePage();
           }
         }
-        return child;
+
+        return widget.child;
       },
     );
   }

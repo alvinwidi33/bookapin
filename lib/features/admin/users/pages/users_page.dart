@@ -75,20 +75,21 @@ class HistoryUI extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: CurvedBottomNavBarAdmin(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          if (index == _currentIndex) return;
-
-          if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/dashboard');
-          } else if (index == 1) {
-            Navigator.pushReplacementNamed(context, '/users');
-          } else if (index == 2) {
-            Navigator.pushReplacementNamed(context, '/profile');
-          }
-        },
-      ),
+      bottomNavigationBar: SafeArea(
+        child: CurvedBottomNavBarAdmin(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            if (index == _currentIndex) return;
+            if (index == 0) {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            } else if (index == 1) {
+              Navigator.pushReplacementNamed(context, '/users');
+            } else if (index == 2) {
+              Navigator.pushReplacementNamed(context, '/profile');
+            }
+          },
+        ),
+      )
     );
   }
 }

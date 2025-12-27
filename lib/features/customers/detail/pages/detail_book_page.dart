@@ -167,7 +167,6 @@ class _DetailBookState extends State<DetailBook> {
 
                             const SizedBox(height: 12),
 
-                            // Book Card
                             Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
@@ -212,9 +211,10 @@ class _DetailBookState extends State<DetailBook> {
                                         : _buildNoCover(),
                                   ),
                                   const SizedBox(height: 12),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                  Wrap(
+                                    alignment: WrapAlignment.center,
+                                    spacing: 12,
+                                    runSpacing: 8,
                                     children: [
                                       _InfoBadge(
                                         icon: Icons.person,
@@ -356,110 +356,111 @@ class _DetailBookState extends State<DetailBook> {
               },
             ),
           ),
-          bottomNavigationBar: Container(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.12),
-                  blurRadius: 12,
-                  offset: const Offset(0, -4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Rent books for", style: AppTheme.subtitleDetail),
-                    Row(
-                      children: [
-                        _QtyButton(
-                          icon: Icons.remove,
-                          onTap: qty > 1 ? () => setState(() => qty--) : null,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text("$qty", style: AppTheme.titleDetail),
-                        ),
-                        _QtyButton(
-                          icon: Icons.add,
-                          onTap: qty < 7 ? () => setState(() => qty++) : null,
-                        ),
-                        Text(
-                          qty == 1 ? " Day" : " Days",
-                          style: AppTheme.subtitleDetail,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Rp. ${NumberFormat('#,###').format((qty * pricePerDay))}',
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryPurple,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                BlocBuilder<RentBookBloc, RentBookState>(
-                  builder: (context, rentState) {
-                    final isLoading = rentState is RentBookLoading;
-                    return BlocBuilder<SignInBloc, SignInState>(
-                      builder: (context, signInState) {
-                        final bool isDisabled =
-                            signInState is! SignInSuccess ||
-                            !signInState.user.isActive ||
-                            isLoading;
-
-                        return GestureDetector(
-                          onTap: isDisabled
-                              ? null
-                              : () {
-                                  final user = (signInState).user;
-                                  context.read<RentBookBloc>().add(
-                                        SubmitRentBook(
-                                          bookId: bookId,
-                                          userId: user.id!,
-                                          duration: qty,
-                                          price: qty * pricePerDay,
-                                        ),
-                                      );
-                                },
-                          child: Container(
-                            height: 56,
-                            decoration: isDisabled
-                                ? AppTheme.buttonDecorationDisabled
-                                : AppTheme.buttonDecorationPrimary,
-                            child: Center(
-                              child: isLoading
-                                  ? const CircularProgressIndicator(color: Colors.white)
-                                  : const Text(
-                                      "Rent Now",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                            ),
+          bottomNavigationBar: SafeArea(
+            child:Container(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.12),
+                    blurRadius: 12,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Rent books for", style: AppTheme.subtitleDetail),
+                      Row(
+                        children: [
+                          _QtyButton(
+                            icon: Icons.remove,
+                            onTap: qty > 1 ? () => setState(() => qty--) : null,
                           ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Text("$qty", style: AppTheme.titleDetail),
+                          ),
+                          _QtyButton(
+                            icon: Icons.add,
+                            onTap: qty < 7 ? () => setState(() => qty++) : null,
+                          ),
+                          Text(
+                            qty == 1 ? " Day" : " Days",
+                            style: AppTheme.subtitleDetail,
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'Rp. ${NumberFormat('#,###').format((qty * pricePerDay))}',
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryPurple,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  BlocBuilder<RentBookBloc, RentBookState>(
+                    builder: (context, rentState) {
+                      final isLoading = rentState is RentBookLoading;
+                      return BlocBuilder<SignInBloc, SignInState>(
+                        builder: (context, signInState) {
+                          final bool isDisabled =
+                              signInState is! SignInSuccess ||
+                              !signInState.user.isActive ||
+                              isLoading;
+
+                          return GestureDetector(
+                            onTap: isDisabled
+                                ? null
+                                : () {
+                                    final user = (signInState).user;
+                                    context.read<RentBookBloc>().add(
+                                          SubmitRentBook(
+                                            bookId: bookId,
+                                            userId: user.id!,
+                                            duration: qty,
+                                            price: qty * pricePerDay,
+                                          ),
+                                        );
+                                  },
+                            child: Container(
+                              height: 56,
+                              decoration: isDisabled
+                                  ? AppTheme.buttonDecorationDisabled
+                                  : AppTheme.buttonDecorationPrimary,
+                              child: Center(
+                                child: isLoading
+                                    ? const CircularProgressIndicator(color: Colors.white)
+                                    : const Text(
+                                        "Rent Now",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                              ),
+                            ),
                         );
                       },
                     );
                   },
                 )
-
                 ],
               ),
             ),
           ),
         ),
+      )
       );
     }
 

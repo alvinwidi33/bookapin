@@ -242,7 +242,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: CurvedBottomNavBar(
+      bottomNavigationBar: SafeArea(
+        child:CurvedBottomNavBar(
         currentIndex: _currentIndex,
         onTap: (index) {
           if (index == _currentIndex) return;
@@ -254,6 +255,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.pushReplacementNamed(context, '/profile');
           }
         },
+      ),
       ),
     );
   }

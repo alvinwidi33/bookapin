@@ -127,10 +127,9 @@ class _DetailRentState extends State<DetailRent> {
               }
             )
           ),
-          // Bottom bar sekarang bisa akses state
-          bottomNavigationBar: BlocBuilder<DetailRentBloc, DetailRentState>(
+          bottomNavigationBar: SafeArea(
+            child: BlocBuilder<DetailRentBloc, DetailRentState>(
             builder: (context, state) {
-              // Hanya tampilkan bottom bar ketika data sudah loaded
               if (state is! DetailRentLoaded) {
                 return const SizedBox.shrink();
               }
@@ -141,7 +140,7 @@ class _DetailRentState extends State<DetailRent> {
               final now = DateTime.now();
               final isLate = now.isAfter(shouldReturnBefore);
               final daysLate = isLate ? now.difference(shouldReturnBefore).inDays : 0;
-              final fine = daysLate * 5000; // Rp 5000 per hari keterlambatan
+              final fine = daysLate * 5000; 
 
               return Container(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
@@ -168,8 +167,8 @@ class _DetailRentState extends State<DetailRent> {
                               style: AppTheme.subtitleDetail,
                             ),
                             Text(
-                              DateFormat('MMM dd yyyy').format(shouldReturnBefore),
-                              style: AppTheme.titleDetail,
+                              DateFormat('MMM dd yyyy hh:mm:ss').format(shouldReturnBefore),
+                              style: AppTheme.subtitleDetail.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -240,6 +239,7 @@ class _DetailRentState extends State<DetailRent> {
           ),
         )
       )
+      )
     );
   }
 }
@@ -299,7 +299,7 @@ class _buildBody extends StatelessWidget {
               const SizedBox(height: 12),
         
               Container(
-                height: 340,
+                height: 380,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
@@ -318,6 +318,8 @@ class _buildBody extends StatelessWidget {
                     Text(
                       rent.bookDetails?.title ?? "Unknown Book",  
                       style: AppTheme.titleDetail,
+                      textAlign: TextAlign.center,
+
                     ),
                     Container(
                       width: 160,
@@ -331,8 +333,10 @@ class _buildBody extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 6,
+                      crossAxisAlignment: WrapCrossAlignment.center,                      
                       children: [
                         _InfoBadge(
                           color: AppTheme.primaryPurple,
@@ -373,7 +377,7 @@ class _buildBody extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _infoRow("Borrowed At", DateFormat('MMM dd yyyy').format(rent.borrowedAt)),
+                    _infoRow("Borrowed At", DateFormat('MMM dd yyyy hh:mm:ss').format(rent.borrowedAt)),
                     const Divider(height: 24),
                     _infoRow("Duration", rent.duration > 1 ? '${rent.duration} days' : '${rent.duration} day'),
                     const Divider(height: 24),

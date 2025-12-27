@@ -15,7 +15,7 @@ class CurvedBottomNavBarAdmin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width:double.infinity,
-      height: 70,
+      height: 72,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),

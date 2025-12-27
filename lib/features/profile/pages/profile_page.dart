@@ -196,7 +196,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-        bottomNavigationBar: BlocBuilder<ProfileBloc, ProfileState>(
+        bottomNavigationBar: SafeArea(
+          child:BlocBuilder<ProfileBloc, ProfileState>(
   builder: (context, state) {
     if (state is! ProfileLoaded) {
       return const SizedBox.shrink();
@@ -229,10 +230,11 @@ class _ProfilePageState extends State<ProfilePage> {
               }
             },
           );
-  },
-),
+          },
+        ),
 
       ),
+      )
     );
   }
 
@@ -548,7 +550,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(width: 12),
             Text(
-              'BookaPin',
+              'BookApin',
               style: AppTheme.headingStyle,
             ),
           ],

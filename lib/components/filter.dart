@@ -122,7 +122,8 @@ class _BookFilterSheetState extends State<BookFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SafeArea(
+      child:Container(
       decoration: BoxDecoration(
         color: AppTheme.backgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -150,6 +151,7 @@ class _BookFilterSheetState extends State<BookFilterSheet> {
           ),
         ],
       ),
+      )
     );
   }
 
