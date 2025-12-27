@@ -36,21 +36,21 @@ class BookRepository {
       throw Exception('Failed: $e');
     }
   }
-   Future<BookDetails> getBookById(String id) async {
-  try {
-    final response = await dio.get('/api/v1/book/$id');
+  Future<BookDetails> getBookById(String id) async {
+    try {
+      final response = await dio.get('/api/v1/book/$id');
 
-    final data = response.data;
+      final data = response.data;
 
-    if (data == null) {
-      throw Exception('Book not found');
+      if (data == null) {
+        throw Exception('Book not found');
+      }
+
+      return BookDetails.fromJson(data);
+    } catch (e) {
+      throw Exception('getBookById error: $e');
     }
-
-    return BookDetails.fromJson(data);
-  } catch (e) {
-    throw Exception('getBookById error: $e');
   }
-}
   Future<List<GenreStatistic>> getGenreStatistics() async {
     try {
       final response = await dio.get('/api/v1/stats/genre');
