@@ -84,20 +84,21 @@ class HistoryUI extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: CurvedBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          if (index == _currentIndex) return;
-
-          if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/home');
-          } else if (index == 1) {
-            Navigator.pushReplacementNamed(context, '/history');
-          } else if (index == 2) {
-            Navigator.pushReplacementNamed(context, '/profile');
-          }
-        },
-      ),
+      bottomNavigationBar: SafeArea(
+        child:CurvedBottomNavBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            if (index == _currentIndex) return;
+            if (index == 0) {
+              Navigator.pushReplacementNamed(context, '/home');
+            } else if (index == 1) {
+              Navigator.pushReplacementNamed(context, '/history');
+            } else if (index == 2) {
+              Navigator.pushReplacementNamed(context, '/profile');
+            }
+          },
+        ),
+      )
     );
   }
 }
@@ -119,7 +120,7 @@ class RentCard extends StatelessWidget {
         ),
         child: Container(
           width: MediaQuery.of(context).size.width * 0.92,
-          margin: const EdgeInsets.only(bottom: 16),
+          margin: const EdgeInsets.only(bottom: 8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),

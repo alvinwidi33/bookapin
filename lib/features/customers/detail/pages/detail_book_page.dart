@@ -169,6 +169,7 @@ class _DetailBookState extends State<DetailBook> {
 
                             Container(
                               width: double.infinity,
+                              padding: EdgeInsets.only(bottom:4),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
                                 color: Colors.white,

@@ -299,8 +299,8 @@ class _buildBody extends StatelessWidget {
               const SizedBox(height: 12),
         
               Container(
-                height: 380,
                 width: double.infinity,
+                margin: const EdgeInsets.only(bottom: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: Colors.white,
@@ -314,49 +314,59 @@ class _buildBody extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    const SizedBox(height: 20),
-                    Text(
-                      rent.bookDetails?.title ?? "Unknown Book",  
-                      style: AppTheme.titleDetail,
-                      textAlign: TextAlign.center,
-
+                    const SizedBox(height: 20),                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      child: Text(
+                        rent.bookDetails!.title,
+                        style: AppTheme.titleDetail,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     Container(
                       width: 160,
-                      height: 240,
-                      padding: const EdgeInsets.all(12),
-                      child: Image.network(
-                        rent.bookDetails?.coverImage ?? '',
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => Container(
-                          color: Colors.grey[300],
-                        ),
-                      ),
+                      height: 200,
+                      padding: EdgeInsets.all(12),
+                      child:
+                          rent.bookDetails!.coverImage != null &&
+                              rent.bookDetails!.coverImage!.isNotEmpty
+                          ? Image.network(
+                              rent.bookDetails!.coverImage!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, _, _) =>
+                                  _buildNoCover(),
+                            )
+                          : _buildNoCover(),
                     ),
+                    const SizedBox(height: 12),
                     Wrap(
+                      alignment: WrapAlignment.center,
                       spacing: 12,
-                      runSpacing: 6,
-                      crossAxisAlignment: WrapCrossAlignment.center,                      
+                      runSpacing: 8,
                       children: [
                         _InfoBadge(
-                          color: AppTheme.primaryPurple,
                           icon: Icons.person,
-                          text: rent.bookDetails?.author ?? "Unknown Author",
+                          color: AppTheme.primaryPurple,
+                          text: rent.bookDetails!.author,
                         ),
                         _InfoBadge(
-                          color: AppTheme.googleBlue,
                           icon: Icons.category,
-                          text: rent.bookDetails?.category ?? "Unknown",
+                          color: AppTheme.googleBlue,
+                          text: rent.bookDetails!.category,
                         ),
                         _InfoBadge(
-                          color: AppTheme.iconColor,
                           icon: Icons.pages,
-                          text: "${rent.bookDetails?.totalPages ?? 0} pages",
+                          color: AppTheme.iconColor,
+                          text: '${rent.bookDetails!.totalPages} pages',
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16),
                   ],
-                )
+                ),
               ),
               const SizedBox(height: 28),
               Text("Preview Rent Informations", style: AppTheme.headingStyle),
@@ -457,4 +467,13 @@ class _InfoBadge extends StatelessWidget {
       ),
     );
   }
-}
+}  Widget _buildNoCover() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.image_not_supported_outlined, size: 64, color: Colors.grey),
+        SizedBox(height: 8),
+        Text('No Cover', style: TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
