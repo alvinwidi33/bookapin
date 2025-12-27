@@ -39,6 +39,16 @@ Project ini menerapkan:
 - **Firebase Auth & Firestore**
 
 ---
+---
+
+## 📱 APK Release (Optional)
+
+Aplikasi **Bookapin** telah berhasil dibuild menjadi file **APK (release)** menggunakan Flutter.
+
+- **Lokasi file**: `apk/bookapin-release.apk`
+- **Perintah build**:
+  ```bash
+  flutter build apk --release
 
 ## 📂 Struktur Folder
 
