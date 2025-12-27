@@ -50,6 +50,9 @@ Aplikasi **Bookapin** telah berhasil dibuild menjadi file **APK (release)** meng
   ```bash
   flutter build apk --release
 
+## 📱 PPT (Optional)
+- [PPT](https://www.canva.com/design/DAG0qM9HwCk/wCOEemSXLNZq4TbnAGnNyw/edit?utm_content=DAG0qM9HwCk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 ## 📂 Struktur Folder
 
 lib/
