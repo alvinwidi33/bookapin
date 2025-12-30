@@ -180,7 +180,9 @@ class _DetailRentState extends State<DetailRent> {
                               style: AppTheme.subtitleDetail,
                             ),
                             Text(
-                              "Rp. ${NumberFormat('#,###').format(fine)}",
+                              rent.isReturn == false 
+                                ? "Rp. ${NumberFormat('#,###').format(fine)}" 
+                                : "Rp. ${NumberFormat('#,###').format(rent.fine)}",
                               style: GoogleFonts.poppins(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -388,6 +390,14 @@ class _buildBody extends StatelessWidget {
                 child: Column(
                   children: [
                     _infoRow("Borrowed At", DateFormat('MMM dd yyyy hh:mm:ss').format(rent.borrowedAt)),
+                    const Divider(height: 24),
+                    _infoRow(
+                      "Returned At",
+                      rent.returnedAt == null
+                          ? "-"
+                          : DateFormat('MMM dd yyyy hh:mm:ss')
+                              .format(rent.returnedAt!),
+                    ),
                     const Divider(height: 24),
                     _infoRow("Duration", rent.duration > 1 ? '${rent.duration} days' : '${rent.duration} day'),
                     const Divider(height: 24),
