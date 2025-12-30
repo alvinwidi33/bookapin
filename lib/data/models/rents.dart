@@ -9,7 +9,7 @@ class Rents {
 
   final String user;
   final Users? userDetails;
-
+  final int fine;
   final int duration;
   final int price;
 
@@ -23,6 +23,7 @@ class Rents {
     this.bookDetails,
     required this.user,
     this.userDetails,
+    required this.fine,
     required this.duration,
     required this.price,
     required this.borrowedAt,
@@ -43,6 +44,7 @@ class Rents {
       bookDetails: bookDetails,
       user: data['user'],
       userDetails: userDetails,
+      fine: data['fine'] as int? ?? 0,
       duration: data['duration'],
       price: data['price'],
       borrowedAt: (data['borrowedAt'] as Timestamp).toDate(),
@@ -75,6 +77,7 @@ extension RentsCopy on Rents {
       bookDetails: bookDetails ?? this.bookDetails,
       user: user,
       userDetails: userDetails ?? this.userDetails,
+      fine: fine,
       duration: duration,
       price: price,
       borrowedAt: borrowedAt,

@@ -68,33 +68,36 @@ class AuthHelper {
 
 
     Future<Users> signInWithGoogle() async {
-      final googleProvider = GoogleAuthProvider();
+  final googleProvider = GoogleAuthProvider();
 
-      final UserCredential result =
-          await FirebaseAuth.instance.signInWithPopup(googleProvider);
+  UserCredential result;
+  
+  if (kIsWeb) {
+    result = await FirebaseAuth.instance.signInWithPopup(googleProvider);
+  } else {
+    result = await FirebaseAuth.instance.signInWithProvider(googleProvider);
+  }
 
-      final User firebaseUser = result.user!;
-      final uid = firebaseUser.uid;
+  final User firebaseUser = result.user!;
+  final uid = firebaseUser.uid;
 
-      final usersRef =
-          FirebaseFirestore.instance.collection('users').doc(uid);
+  final usersRef = FirebaseFirestore.instance.collection('users').doc(uid);
+  final doc = await usersRef.get();
 
-      final doc = await usersRef.get();
+  if (!doc.exists) {
+    await usersRef.set({
+      'username': firebaseUser.displayName ?? '',
+      'email': firebaseUser.email,
+      'role': 'Customer',
+      'isActive': true,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
 
-      if (!doc.exists) {
-        await usersRef.set({
-          'username': firebaseUser.displayName ?? '',
-          'email': firebaseUser.email,
-          'role': 'Customer',
-          'isActive': true,
-          'createdAt': FieldValue.serverTimestamp(),
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
-      }
-
-      final savedDoc = await usersRef.get();
-      return Users.fromFirestore(savedDoc);
-    }
+  final savedDoc = await usersRef.get();
+  return Users.fromFirestore(savedDoc);
+}
 
 
     Stream<User?> checkUserSignInState() {
