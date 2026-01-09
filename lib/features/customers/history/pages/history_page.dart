@@ -206,7 +206,7 @@ class RentCard extends StatelessWidget {
                       horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: rent.isReturn
-                        ? Colors.lightGreenAccent
+                        ? Colors.green
                         : AppTheme.iconColor,
                     borderRadius: BorderRadius.circular(4),
                   ),

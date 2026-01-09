@@ -49,13 +49,23 @@ class _SigninPageState extends State<SigninPage> {
             authState = AuthAnimState.loading;
           });
         } else if (state is SignInSuccess) {
-          setState((){
+          setState(() {
             authState = AuthAnimState.success;
           });
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Hello ${state.user.username}")),
           );
-          state.user.role == 'Customer' ? Navigator.pushReplacementNamed(context, '/home') : Navigator.pushReplacementNamed(context, '/dashboard');
+
+          Future.delayed(const Duration(milliseconds: 1200), () {
+            if (!mounted) return;
+
+            final route = state.user.role == 'Customer'
+                ? '/home'
+                : '/dashboard';
+
+            Navigator.pushReplacementNamed(context, route);
+          });
         } else if (state is SignInError) {
           setState((){
             authState = AuthAnimState.error;
@@ -178,9 +188,6 @@ class _SigninPageState extends State<SigninPage> {
                             decoration: AppTheme.buttonDecorationPrimary,
                             child: ElevatedButton(
                               onPressed: () {
-                                setState(() {
-                                  authState = AuthAnimState.idle;
-                                });
                                 context.read<SignInBloc>().add(
                                   SignInWithEmailEvent(
                                     email: emailController.text.trim(), 

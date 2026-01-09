@@ -89,7 +89,7 @@ class _AuthIndicatorState extends State<AuthIndicator>
         break;
       case AuthAnimState.success:
         icon = Icons.check_circle;
-        color = Colors.limeAccent;
+        color = Colors.green;
         text = "Login Success";
         break;
       case AuthAnimState.error:
