@@ -1,4 +1,3 @@
-import 'package:bookapin/components/navbar.dart';
 import 'package:bookapin/components/navbar_admin.dart';
 import 'package:bookapin/components/theme_data.dart';
 import 'package:bookapin/data/models/users.dart';
@@ -8,6 +7,7 @@ import 'package:bookapin/features/admin/users/bloc/users_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
@@ -36,7 +36,12 @@ class HistoryUI extends StatelessWidget {
         child: BlocBuilder<UsersBloc, UsersState>(
           builder: (context, state) {
             if (state is UsersLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: Lottie.asset('assets/loading.json',
+                width: 200,
+                height: 200,
+                repeat: true,
+                ),
+              );
             }
 
             if (state is UsersError) {

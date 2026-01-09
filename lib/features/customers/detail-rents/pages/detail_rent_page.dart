@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class DetailRent extends StatefulWidget {
   const DetailRent({super.key});
@@ -25,9 +26,15 @@ class _DetailRentState extends State<DetailRent> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      builder: (_) => Center(
+        child: Center(
+          child: Lottie.asset('assets/loading.json',
+                width: 200,
+                height: 200,
+                repeat: true,
+                ),
+            ),
+      )
     );
   }
 
@@ -90,8 +97,12 @@ class _DetailRentState extends State<DetailRent> {
             child: BlocBuilder<DetailRentBloc, DetailRentState>(
               builder: (context, state) {
                 if (state is DetailRentLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return Center(
+                    child: Lottie.asset('assets/loading.json',
+                      width: 200,
+                      height: 200,
+                      repeat: true,
+                      ),
                   );
                 }
                 if (state is DetailRentError) {

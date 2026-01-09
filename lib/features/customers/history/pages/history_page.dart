@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -46,8 +47,12 @@ class HistoryUI extends StatelessWidget {
         child: BlocBuilder<RentHistoryBloc, RentHistoryState>(
           builder: (context, state) {
             if (state is RentHistoryLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Center(
+                child: Lottie.asset('assets/loading.json',
+                width: 200,
+                height: 200,
+                repeat: true,
+                ), 
               );
             }
 

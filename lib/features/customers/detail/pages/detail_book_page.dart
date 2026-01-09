@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class DetailBook extends StatefulWidget {
   const DetailBook({super.key});
@@ -30,7 +31,12 @@ class _DetailBookState extends State<DetailBook> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
+      builder: (_) => Center(child: Lottie.asset('assets/loading.json',
+                width: 200,
+                height: 200,
+                repeat: true,
+                )
+      )
     );
   }
 
@@ -87,7 +93,11 @@ class _DetailBookState extends State<DetailBook> {
             child: BlocBuilder<DetailBookBloc, DetailBookState>(
               builder: (context, state) {
                 if (state is DetailBookLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(child: Lottie.asset('assets/loading.json',
+                width: 200,
+                height: 200,
+                repeat: true,
+                ),);
                 }
 
                 if (state is DetailBookError) {
@@ -440,7 +450,11 @@ class _DetailBookState extends State<DetailBook> {
                                   : AppTheme.buttonDecorationPrimary,
                               child: Center(
                                 child: isLoading
-                                    ? const CircularProgressIndicator(color: Colors.white)
+                                    ? Lottie.asset('assets/loading.json',
+                                      width: 200,
+                                      height: 200,
+                                      repeat: true,
+                                      )
                                     : const Text(
                                         "Rent Now",
                                         style: TextStyle(
