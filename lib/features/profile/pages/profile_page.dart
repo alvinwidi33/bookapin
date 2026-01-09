@@ -7,6 +7,7 @@ import 'package:bookapin/features/profile/bloc/profile_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -49,8 +50,12 @@ class _ProfilePageState extends State<ProfilePage> {
               child: BlocBuilder<ProfileBloc, ProfileState>(
                 builder: (context, state) {
                   if (state is ProfileLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return Center(
+                      child: Lottie.asset('assets/loading.json',
+                      width: 200,
+                      height: 200,
+                      repeat: true,
+                      ), 
                     );
                   }
 

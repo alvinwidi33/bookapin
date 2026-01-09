@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:bookapin/features/admin/dashboard/bloc/dashboard_bloc.dart';
 import 'package:bookapin/features/admin/dashboard/bloc/dashboard_event.dart';
 import 'package:bookapin/features/admin/dashboard/bloc/dashboard_state.dart';
+import 'package:lottie/lottie.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -30,9 +31,11 @@ class _DashboardPageState extends State<DashboardPage> {
         builder: (context, state) {
           if (state is DashboardLoading) {
             return Center(
-              child: CircularProgressIndicator(
-                color: AppTheme.primaryPurple,
-              ),
+              child: Lottie.asset('assets/loading.json',
+                width: 200,
+                height: 200,
+                repeat: true,
+                ),
             );
           }
 

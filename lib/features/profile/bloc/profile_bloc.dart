@@ -1,11 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:bookapin/data/models/users.dart';
-import 'package:bookapin/data/repositories/user_repository.dart';
 import 'package:bookapin/features/authentication/auth_helper.dart';
 import 'package:bookapin/features/profile/bloc/profile_event.dart';
 import 'package:bookapin/features/profile/bloc/profile_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

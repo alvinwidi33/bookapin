@@ -6,6 +6,8 @@ import 'package:bookapin/features/customers/home/bloc/home_event.dart';
 import 'package:bookapin/features/customers/home/bloc/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -113,7 +115,13 @@ class _HomePageState extends State<HomePage> {
                   child: BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
                       if (state is HomeLoading) {
-                        return const Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: Lottie.asset('assets/loading.json',
+                          width: 200,
+                          height: 200,
+                          repeat: true,
+                          ), 
+                        );
                       }
 
                       if (state is HomeError) {

@@ -6,6 +6,7 @@ import 'package:bookapin/features/admin/rents-user/bloc/rent_users_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class RentUsersPage extends StatefulWidget {
   const RentUsersPage({super.key});
@@ -64,8 +65,12 @@ class RentUsersUI extends StatelessWidget {
         child: BlocBuilder<RentUsersBloc, RentUsersState>(
           builder: (context, state) {
             if (state is RentUsersLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Center(
+                child: Lottie.asset('assets/loading.json',
+                width: 200,
+                height: 200,
+                repeat: true,
+                ),
               );
             }
 
