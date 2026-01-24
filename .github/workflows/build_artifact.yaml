@@ -27,7 +27,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # 🔥 INI YANG WAJIB ADA
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
