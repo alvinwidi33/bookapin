@@ -7,7 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthHelper {
-  final firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth auth;
+  AuthHelper(this.auth);
+  Stream<User?> authState() => auth.authStateChanges();
 
   final GoogleSignIn googleSignIn = GoogleSignIn.instance;
   final clientId =
@@ -21,7 +23,7 @@ class AuthHelper {
     String password,
   ) async {
     final UserCredential userCredential =
-        await firebaseAuth.createUserWithEmailAndPassword(
+        await auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -48,7 +50,7 @@ class AuthHelper {
     String email,
     String password,
   ) async {
-    final userCredential = await firebaseAuth
+    final userCredential = await auth
         .signInWithEmailAndPassword(
           email: email,
           password: password,
@@ -73,9 +75,9 @@ class AuthHelper {
   UserCredential result;
   
   if (kIsWeb) {
-    result = await FirebaseAuth.instance.signInWithPopup(googleProvider);
+    result = await auth.signInWithPopup(googleProvider);
   } else {
-    result = await FirebaseAuth.instance.signInWithProvider(googleProvider);
+    result = await auth.signInWithProvider(googleProvider);
   }
 
   final User firebaseUser = result.user!;
@@ -101,12 +103,12 @@ class AuthHelper {
 
 
     Stream<User?> checkUserSignInState() {
-      final state = firebaseAuth.authStateChanges();
+      final state = auth.authStateChanges();
       return state;
     }
 
   signOut() async {
-    final user = firebaseAuth.currentUser;
+    final user = auth.currentUser;
 
     if (user != null) {
       final isGoogleUser = user.providerData.any(
@@ -122,6 +124,6 @@ class AuthHelper {
       }
     }
 
-    await firebaseAuth.signOut();
+    await auth.signOut();
   }
 }

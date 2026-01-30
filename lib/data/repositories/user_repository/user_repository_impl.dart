@@ -1,9 +1,11 @@
 import 'package:bookapin/data/models/users.dart';
+import 'package:bookapin/data/repositories/user_repository/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserRepository {
+class UserRepositoryImpl implements UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  @override
   Future<List<Users>> getAllCustomer() async {
     try {
       final snapshot = await _firestore
@@ -18,6 +20,7 @@ class UserRepository {
       throw Exception('Gagal mengambil data customer');
     }
   }
+  @override
   Future<void> updateUserActive(
     String userId,
     bool isActive,

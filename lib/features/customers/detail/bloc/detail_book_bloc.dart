@@ -1,4 +1,4 @@
-import 'package:bookapin/data/repositories/book_repository.dart';
+import 'package:bookapin/data/repositories/book_repository/book_repository.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_event.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

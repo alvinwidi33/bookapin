@@ -1,4 +1,4 @@
-import 'package:bookapin/data/repositories/book_repository.dart';
+import 'package:bookapin/data/repositories/book_repository/book_repository.dart';
 import 'package:bookapin/features/customers/home/bloc/home_event.dart';
 import 'package:bookapin/features/customers/home/bloc/home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -271,13 +271,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(HomeError(e.toString()));
       }
     } else {
-      // Local sorting untuk sort key lainnya (jika ada)
       final books = List.of(currentState.allBooks);
-
-      // Contoh: tambahkan sorting lain di sini jika diperlukan
-      // if (event.sortKey == 'title') {
-      //   books.sort((a, b) => a.title.compareTo(b.title));
-      // }
 
       emit(
         currentState.copyWith(

@@ -1,6 +1,6 @@
 import 'package:bookapin/components/theme_data.dart';
 import 'package:bookapin/data/models/rents.dart';
-import 'package:bookapin/data/repositories/rent_repository.dart';
+import 'package:bookapin/data/repositories/rent_repository/rent_repository.dart';
 import 'package:bookapin/features/customers/detail-rents/bloc/detail_rent_bloc.dart';
 import 'package:bookapin/features/customers/detail-rents/bloc/detail_rent_event.dart';
 import 'package:bookapin/features/customers/detail-rents/bloc/detail_rent_state.dart';
@@ -59,7 +59,7 @@ class _DetailRentState extends State<DetailRent> {
         BlocProvider(
           create: (context) => DetailRentBloc(
             context.read<RentRepository>(),
-          )..add(FetchRentDetail(rentId)),
+          )..add(FetchRentDetail(rentId: rentId)),
         ),
         BlocProvider(
           create: (context) => ReturnBookBloc(
@@ -122,7 +122,7 @@ class _DetailRentState extends State<DetailRent> {
                           onPressed: () {
                             context
                                 .read<DetailRentBloc>()
-                                .add(FetchRentDetail(rentId));
+                                .add(FetchRentDetail(rentId: rentId));
                           },
                           child: const Text('Retry'),
                         ),

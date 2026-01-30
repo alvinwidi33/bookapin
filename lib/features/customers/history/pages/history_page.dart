@@ -22,7 +22,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     super.initState();
     final userId = FirebaseAuth.instance.currentUser!.uid;
-    context.read<RentHistoryBloc>().add(FetchRentHistory(userId));
+    context.read<RentHistoryBloc>().add(FetchRentHistory(userId: userId));
   }
 
   @override

@@ -3,7 +3,7 @@ name: Build Artifact
 on:
   push:
     branches:
-      - chore/upgrade-flutter-packages
+      - main
 
 jobs:
   build:

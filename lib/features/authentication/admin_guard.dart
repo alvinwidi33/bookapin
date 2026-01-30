@@ -9,7 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AdminGuard extends StatefulWidget {
   final Widget child;
-  const AdminGuard({super.key, required this.child});
+  final FirebaseAuth auth;
+  const AdminGuard({super.key, required this.child, required this.auth});
 
   @override
   State<AdminGuard> createState() => _AdminGuardState();
@@ -20,7 +21,7 @@ class _AdminGuardState extends State<AdminGuard> {
   void initState() {
     super.initState();
 
-    final user = FirebaseAuth.instance.currentUser;
+    final user = widget.auth.currentUser;
     if (user != null) {
       context.read<ProfileBloc>().add(
         LoadProfile(userId: user.uid),
@@ -28,33 +29,33 @@ class _AdminGuardState extends State<AdminGuard> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        if (FirebaseAuth.instance.currentUser == null) {
-          return const SigninPage();
-        }
+ @override
+Widget build(BuildContext context) {
+  return BlocBuilder<ProfileBloc, ProfileState>(
+    builder: (context, state) {
+      if (widget.auth.currentUser == null) {
+        return const SigninPage();
+      }
 
-        if (state is ProfileInitial || state is ProfileLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+      if (state is ProfileInitial || state is ProfileLoading) {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      }
 
-        if (state is ProfileError) {
+      if (state is ProfileError) {
+        return const HomePage();
+      }
+
+      if (state is ProfileLoaded) {
+        final role = state.user.role.toLowerCase();
+        if (role != 'admin') {
           return const HomePage();
         }
+      }
 
-        if (state is ProfileLoaded) {
-          final role = state.user.role.toLowerCase();
-          if (role != 'admin') {
-            return const HomePage();
-          }
-        }
-
-        return widget.child;
-      },
-    );
-  }
+      return widget.child;
+    },
+  );
+}
 }

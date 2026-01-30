@@ -181,7 +181,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   }
 
-                  // ProfileLogoutLoading
                   if (state is ProfileLogoutLoading) {
                     return const Center(
                       child: Column(
@@ -261,7 +260,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       child: Column(
         children: [
-          // Avatar
           Container(
             width: 100,
             height: 100,

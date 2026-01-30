@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -314,7 +313,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         const SizedBox(width: 12),
-        // Combined Filter & Sort button
         InkWell(
           onTap: state != null ? () => _showFilterSheet(state) : null,
           borderRadius: BorderRadius.circular(12),
@@ -356,7 +354,6 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          // Search keyword chip
           if (state.searchKeyword.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -385,7 +382,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-          // Year filter chip
           if (state.activeYear != null)
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -402,7 +398,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-          // Sort chip
           if (state.sortBy != null)
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -415,7 +410,6 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: AppTheme.primaryPurple,
                 deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white),
                 onDeleted: () {
-                  // Refresh without sort
                   if (state.hasActiveFilter) {
                     context.read<HomeBloc>().add(
                           ApplyFilter(categories: state.activeCategories),
@@ -431,7 +425,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-          // Category chips
           ...state.activeCategories.map((category) {
             return Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -460,7 +453,6 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           }),
-          // Clear all button
           if (state.hasActiveFilter)
             Padding(
               padding: const EdgeInsets.only(left: 8),
@@ -566,13 +558,15 @@ class _BookCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        Text(
-                          'Rp 5,000/day',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTheme.cardBody.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.primaryPurple,
+                        Flexible(
+                          child: Text(
+                            'Rp 5,000/day',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTheme.cardBody.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primaryPurple,
+                            ),
                           ),
                         ),
                       ],
@@ -615,6 +609,7 @@ class _InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),

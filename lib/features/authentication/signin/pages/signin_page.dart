@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bookapin/components/theme_data.dart';
 import 'package:bookapin/features/authentication/signin/animation/animation_state.dart';
 import 'package:bookapin/features/authentication/signin/bloc/signin_bloc.dart';
@@ -19,16 +21,20 @@ class _SigninPageState extends State<SigninPage> {
   bool isVisible = false;
   bool isPasswordValid = true;
   AuthAnimState authState = AuthAnimState.idle;
-
+    Timer? _resetAnimTimer;
+Timer? _navigationTimer;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
+@override
+void dispose() {
+  _resetAnimTimer?.cancel();
+  _navigationTimer?.cancel();
+  emailController.dispose();
+  passwordController.dispose();
+  super.dispose();
+}
+
   bool _isPasswordValid(String value) {
     final hasMinLength = value.length >= 8;
     final hasLetter = RegExp(r'[A-Za-z]').hasMatch(value);
@@ -57,15 +63,18 @@ class _SigninPageState extends State<SigninPage> {
             SnackBar(content: Text("Hello ${state.user.username}")),
           );
 
-          Future.delayed(const Duration(milliseconds: 1200), () {
-            if (!mounted) return;
+          _navigationTimer = Timer(
+            const Duration(milliseconds: 1200),
+            () {
+              if (!mounted) return;
 
-            final route = state.user.role == 'Customer'
-                ? '/home'
-                : '/dashboard';
+              final route = state.user.role == 'Customer'
+                  ? '/home'
+                  : '/dashboard';
 
-            Navigator.pushReplacementNamed(context, route);
-          });
+              Navigator.pushReplacementNamed(context, route);
+            },
+          );
         } else if (state is SignInError) {
           setState((){
             authState = AuthAnimState.error;
@@ -74,13 +83,14 @@ class _SigninPageState extends State<SigninPage> {
             SnackBar(content: Text(state.message)),
           );
         }
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) {
-            setState(() {
-              authState = AuthAnimState.idle;
-            });
-          }
-        });
+        _resetAnimTimer = Timer(
+          const Duration(seconds: 2),
+          () {
+            if (mounted) {
+              setState(() => authState = AuthAnimState.idle);
+            }
+          },
+        );
       },
     child: Scaffold(
       body: SafeArea(
@@ -107,6 +117,7 @@ class _SigninPageState extends State<SigninPage> {
                         const SizedBox(height: 16),
                         
                         Container(
+                          key: const Key('email_text_field'),
                           decoration: AppTheme.inputContainerDecoration,
                           clipBehavior: Clip.antiAlias,
                           child: TextField(
@@ -132,6 +143,7 @@ class _SigninPageState extends State<SigninPage> {
                         const SizedBox(height: 16),
                         
                         Container(
+                          key: const Key('password_text_field'),
                           decoration: AppTheme.inputContainerDecoration,
                           clipBehavior: Clip.antiAlias,
                           child: TextField(
@@ -187,6 +199,7 @@ class _SigninPageState extends State<SigninPage> {
                           child: Container(
                             decoration: AppTheme.buttonDecorationPrimary,
                             child: ElevatedButton(
+                              key: const Key('signin_button'),
                               onPressed: () {
                                 context.read<SignInBloc>().add(
                                   SignInWithEmailEvent(

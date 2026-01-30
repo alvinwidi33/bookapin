@@ -10,7 +10,7 @@ abstract class RentHistoryEvent extends Equatable {
 class FetchRentHistory extends RentHistoryEvent {
   final String userId;
 
-  const FetchRentHistory(this.userId);
+  const FetchRentHistory({required this.userId});
 
   @override
   List<Object?> get props => [userId];
