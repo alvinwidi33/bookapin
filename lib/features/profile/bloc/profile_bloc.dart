@@ -43,7 +43,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     RefreshProfile event,
     Emitter<ProfileState> emit,
   ) async {
-    // Tidak emit loading agar tidak mengganggu UI
     try {
       final docSnapshot = await _firestore
           .collection('users')

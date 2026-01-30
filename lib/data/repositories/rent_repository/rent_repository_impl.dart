@@ -1,15 +1,17 @@
 import 'package:bookapin/data/models/books.dart';
 import 'package:bookapin/data/models/rents.dart';
-import 'package:bookapin/data/repositories/book_repository.dart';
+import 'package:bookapin/data/repositories/book_repository/book_repository.dart';
+import 'package:bookapin/data/repositories/rent_repository/rent_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class RentRepository {
+class RentRepositoryImpl implements RentRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final BookRepository _bookApi;
 
-  RentRepository({required BookRepository bookApi})
+  RentRepositoryImpl({required BookRepository bookApi})
       : _bookApi = bookApi;
 
+  @override
   Future<void> createRent({
     required String bookId,
     required String userId,
@@ -27,7 +29,8 @@ class RentRepository {
     });
   }
   
-Future<List<Rents>> getUserRents(String userId) async {
+@override
+  Future<List<Rents>> getUserRents(String userId) async {
     final rentQuery = await _firestore
       .collection('rents')
       .where('user', isEqualTo: userId)
@@ -54,6 +57,7 @@ Future<List<Rents>> getUserRents(String userId) async {
 
     return result;
   }
+  @override
   Future<Rents> getRentById(String rentId) async {
     final doc = await _firestore
         .collection('rents')
@@ -71,6 +75,7 @@ Future<List<Rents>> getUserRents(String userId) async {
     );
   }
 
+  @override
   Future<void> returnBook(String rentId, int fine) async {
     await _firestore
       .collection('rents')

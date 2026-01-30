@@ -4,7 +4,6 @@
 Aplikasi ini mendukung **role Customer dan Admin**, menggunakan **Firebase Authentication**, arsitektur **BLoC**, serta integrasi **REST API** dan **Firestore**.
 
 ---
-
 ## ✨ Fitur Utama
 
 ### 👤 Authentication

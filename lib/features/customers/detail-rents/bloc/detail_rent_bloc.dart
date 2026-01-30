@@ -1,5 +1,5 @@
 
-import 'package:bookapin/data/repositories/rent_repository.dart';
+import 'package:bookapin/data/repositories/rent_repository/rent_repository.dart';
 import 'package:bookapin/features/customers/detail-rents/bloc/detail_rent_event.dart';
 import 'package:bookapin/features/customers/detail-rents/bloc/detail_rent_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

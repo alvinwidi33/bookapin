@@ -1,6 +1,6 @@
 import 'package:bookapin/components/theme_data.dart';
-import 'package:bookapin/data/repositories/book_repository.dart';
-import 'package:bookapin/data/repositories/rent_repository.dart';
+import 'package:bookapin/data/repositories/book_repository/book_repository.dart';
+import 'package:bookapin/data/repositories/rent_repository/rent_repository.dart';
 import 'package:bookapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:bookapin/features/authentication/signin/bloc/signin_state.dart';
 import 'package:bookapin/features/customers/detail/bloc/detail_book_bloc.dart';
@@ -59,7 +59,7 @@ class _DetailBookState extends State<DetailBook> {
         BlocProvider(
           create: (context) =>
               DetailBookBloc(context.read<BookRepository>())
-                ..add(FetchBookDetail(bookId)),
+                ..add(FetchBookDetail(bookId: bookId)),
         ),
         BlocProvider(
           create: (context) => RentBookBloc(context.read<RentRepository>()),
@@ -116,7 +116,7 @@ class _DetailBookState extends State<DetailBook> {
                         ElevatedButton(
                           onPressed: () {
                             context.read<DetailBookBloc>().add(
-                              FetchBookDetail(bookId),
+                              FetchBookDetail(bookId: bookId),
                             );
                           },
                           child: Text('Retry'),

@@ -39,8 +39,8 @@ class HomeLoaded extends HomeState {
     String? searchKeyword,
     String? activeYear,
     String? sortBy,
-    bool clearYear = false,      // Flag untuk clear year
-    bool clearSort = false,      // Flag untuk clear sort
+    bool clearYear = false,     
+    bool clearSort = false,     
   }) {
     return HomeLoaded(
       allBooks: allBooks ?? this.allBooks,

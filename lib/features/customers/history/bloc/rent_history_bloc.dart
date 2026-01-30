@@ -1,4 +1,4 @@
-import 'package:bookapin/data/repositories/rent_repository.dart';
+import 'package:bookapin/data/repositories/rent_repository/rent_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'rent_history_event.dart';

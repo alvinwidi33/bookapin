@@ -43,11 +43,19 @@ class _SignupPageState extends State<SignupPage> {
       listener: (context, state) {
         if (state is SignUpLoading) {
         } else if (state is SignUpSuccess) {
+          if (!mounted) return;
+
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Success Sign up. Redirecting to Sign In Page", style:AppTheme.bodyStyle)),
+            SnackBar(
+              content: Text(
+                "Success Sign up. Redirecting to Sign In Page",
+                style: AppTheme.bodyStyle,
+              ),
+            ),
           );
+
           Navigator.pushReplacementNamed(context, '/signin');
-        } else if (state is SignUpError) {
+        }else if (state is SignUpError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
@@ -80,6 +88,7 @@ class _SignupPageState extends State<SignupPage> {
                         decoration: AppTheme.inputContainerDecoration,
                         clipBehavior: Clip.antiAlias,
                         child: TextField(
+                          key: const Key('signup_username_field'),
                           controller: usernameController,
                           keyboardType: TextInputType.text,
                           decoration: AppTheme.inputDecoration("Username"),
@@ -99,6 +108,7 @@ class _SignupPageState extends State<SignupPage> {
                         decoration: AppTheme.inputContainerDecoration,
                         clipBehavior: Clip.antiAlias,
                         child: TextField(
+                          key: const Key('signup_email_field'),
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: AppTheme.inputDecoration("Email"),
@@ -118,6 +128,7 @@ class _SignupPageState extends State<SignupPage> {
                         decoration: AppTheme.inputContainerDecoration,
                         clipBehavior: Clip.antiAlias,
                         child: TextField(
+                          key: const Key('signup_password_field'),
                           controller: passwordController,
                           obscureText: !isVisible,
                           onChanged: (value) {
@@ -169,6 +180,7 @@ class _SignupPageState extends State<SignupPage> {
                         child: Container(
                           decoration: AppTheme.buttonDecorationPrimary,
                           child: ElevatedButton(
+                            key: Key('signup_submit_button'),
                             onPressed: () {
                           context.read<SignUpBloc>().add(
                             SignUpWithUsernameEmailEvent(

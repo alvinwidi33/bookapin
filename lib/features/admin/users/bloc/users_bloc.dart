@@ -1,4 +1,4 @@
-import 'package:bookapin/data/repositories/user_repository.dart';
+import 'package:bookapin/data/repositories/user_repository/user_repository.dart';
 import 'package:bookapin/features/admin/users/bloc/users_event.dart';
 import 'package:bookapin/features/admin/users/bloc/users_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
